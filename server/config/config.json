@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "iamkharri",
+    "database": "waera_development",
+    "host": "localhost",
+    "dialect": "postgres",
+    "models": ["user.js", "team.js", "board.js", "list.js", "card.js", "label.js", "attachment.js", "checklist.js", "checklistItem.js", "comment.js"]
+  },
+  "test": {
+    "username": "postgres",
+    "password": "iamkharri",
+    "database": "waera_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "iamkharri",
+    "database": "waera_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

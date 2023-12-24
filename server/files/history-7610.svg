@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+
+<defs>
+</defs>
+<g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
+	<path d="M 47.971 87.029 c -13.614 0 -26.446 -6.642 -34.324 -17.767 c -2.382 -3.365 -4.249 -7.046 -5.55 -10.94 l 3.819 -1.276 c 1.176 3.52 2.864 6.847 5.017 9.89 c 7.125 10.061 18.727 16.067 31.038 16.067 c 20.955 0 38.003 -17.048 38.003 -38.003 c 0 -20.955 -17.048 -38.003 -38.003 -38.003 S 9.968 24.045 9.968 45 H 5.942 c 0 -23.175 18.854 -42.029 42.029 -42.029 C 71.146 2.971 90 21.825 90 45 S 71.146 87.029 47.971 87.029 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+	<polygon points="65.24,61.63 45.96,45.96 45.96,17.8 49.98,17.8 49.98,44.04 67.78,58.51 " style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) "/>
+	<polygon points="7.96,47.85 0,39.89 2.85,37.05 7.96,42.15 13.06,37.05 15.91,39.89 " style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) "/>
+</g>
+</svg>
