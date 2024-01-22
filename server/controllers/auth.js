@@ -51,10 +51,15 @@ const loginUser = async (req, res) => {
         //         $or: [{ username: value }, { email: value }]
         //     }
         // });
-        const user = await User.findOne({ 
-            where: { Username: value }
+        const user = await User.findOne({
+            where: {
+                [Op.or]: [
+                    { Username: value },
+                    { Email: value },
+                ],
+            },
         });
-
+        
         if (!user) {
             return res.status(404).json({ message: 'Invalid User!' });
         };

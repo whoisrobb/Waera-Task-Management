@@ -2,18 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useTask } from './TaskProvider'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-// import Uppy from '@uppy/core';
-// import XHRUpload from '@uppy/xhr-upload';
-// import { Dashboard } from '@uppy/react';
-// import Dashboard from '@uppy/react/src/Dashboard'
 import { useDropzone } from 'react-dropzone';
 import { randomColor, serverUrl } from '../utils/utils'
 
 
-// const uppy = new Uppy({ autoProceed: true });
-
 const ActiveCard = () => {
-    const { setCardFalse, cardItem,activeChecklists } = useTask();
+    const { setCardFalse, cardItem, activeChecklists } = useTask();
 
     const [cardId, setCardId] = useState(null);
     const [cardName, setCardName] = useState(null);
@@ -174,14 +168,17 @@ const ActiveCard = () => {
             <div className="card-header">
                 <h3 className='card-name'>{cardName}</h3>
                 <div className="btn-group">
-                    <button onClick={() => {deleteCard(cardId);}}>del</button>
-                    <button onClick={() => {handleUpdateCard(cardId); localStorage.setItem('activeCard', []);}}>close</button>
+                    <button onClick={() => {deleteCard(cardId);}}><i className="uil uil-trash-alt"></i></button>
+                    <button onClick={() => {handleUpdateCard(cardId); localStorage.setItem('activeCard', []);}}><i className="uil uil-times"></i></button>
                 </div>
             </div>
             <div className="card-body">
                 <div className="card-inputs">
                     <div className="card-description">
-                        <h3>description</h3>
+                        <h3 className='input-head'>
+                            <i className="uil uil-file-alt"></i>
+                            description
+                        </h3>
                         <DescriptionComponent
                             activeDescription={activeDescription}
                             setActiveDescription={setActiveDescription}
@@ -191,7 +188,10 @@ const ActiveCard = () => {
                     </div>
                     {cardLabels.length >= 1 &&
                     <div className='card-labels'>
-                        <h3>labels</h3>
+                        <h3 className='input-head'>
+                            <i className="uil uil-tag"></i>
+                            labels
+                        </h3>
                         <div className="labels-wrapper">
                             {cardLabels.map((cardLabel, index) => (
                                 <div className="label-group" key={cardLabel.LabelID}>
@@ -201,7 +201,7 @@ const ActiveCard = () => {
                                     >
                                         <p style={{ mixBlendMode: 'difference', color: 'white'  }}>{cardLabel.LabelName}</p>
                                     </div>
-                                    <button onClick={() => removeLabel(index)}>x</button>
+                                    <button onClick={() => removeLabel(index)}><i className="uil uil-times"></i></button>
                                 </div>
                             ))}
                         </div>
@@ -209,7 +209,10 @@ const ActiveCard = () => {
                     }
                     {checklists.length >= 1 &&
                     <div className="card-checklists">
-                        <h3>checklists</h3>
+                        <h3 className='input-head'>
+                            <i className="uil uil-check-square"></i>
+                            checklists
+                        </h3>
                         <div className="checklists-wrapper">
                             {checklists.map((checklist, index) => (
                                 <Checklist
@@ -229,7 +232,7 @@ const ActiveCard = () => {
                         <div className="modal">
                             <div className="modal-header">
                                 <h3>labels</h3>
-                                <button className="secondary close-label" onClick={() => setCreateLabel(false)}>x</button>
+                                <button className="close" onClick={() => setCreateLabel(false)}><i className="uil uil-times"></i></button>
                             </div>
                             <form onSubmit={handleLabel}>
                                 <input
@@ -261,7 +264,7 @@ const ActiveCard = () => {
                         <div className="modal">
                             <div className="modal-header">
                                 <h3>checklists</h3>
-                                <button className="secondary close-checklist" onClick={() => setCreateChecklist(false)}>x</button>
+                                <button className="close" onClick={() => setCreateChecklist(false)}><i className="uil uil-times"></i></button>
                             </div>
                             <form onSubmit={(e) => {
                                 e.preventDefault();
@@ -286,7 +289,7 @@ const ActiveCard = () => {
                         <div className="modal">
                             <div className="modal-header">
                                 <h3>attachments</h3>
-                                <button className="secondary close-attachment" onClick={() => setCreateAttachments(false)}>x</button>
+                                <button className="close" onClick={() => setCreateAttachments(false)}><i className="uil uil-times"></i></button>
                             </div>
                             <div
                                 {...getRootProps()}
@@ -322,7 +325,7 @@ export default ActiveCard
 
 const DescriptionComponent = ({ activeDescription, setActiveDescription, description, setDescription }) => {
     return (
-        <>
+        <div className='description-wrapper'>
         {activeDescription ?
             <>
                 <ReactQuill value={description} onChange={(value) => setDescription(value)} />
@@ -341,7 +344,7 @@ const DescriptionComponent = ({ activeDescription, setActiveDescription, descrip
                 }
             </div>
         }
-        </>
+        </div>
     )
 }
 
@@ -377,15 +380,6 @@ const Checklist = ({ checklist, checklistIndex, updateChecklistItems }) => {
             <p>{checklist.ChecklistName}</p>
             {checklistItems && checklistItems.map((item, index) => (
                 <li key={index}>
-                    {/* <div className="checkbox-container">
-                        <input className="custom-checkbox"
-                            checked={item.ItemComplete}
-                            onChange={() => handleToggleItem(index)}
-                            type="checkbox"
-                        />
-                        <span className="checkmark"></span>
-                        {item.ChecklistItemText}
-                    </div> */}
                     <div className="checkbox-container">
                         <input className=""
                             checked={item.ItemComplete}
@@ -394,7 +388,7 @@ const Checklist = ({ checklist, checklistIndex, updateChecklistItems }) => {
                         />
                         <p>{item.ChecklistItemText}</p>
                     </div>
-                    <button className='remove' onClick={() => handleRemoveItem(index)}>x</button>
+                    <button className='remove' onClick={() => handleRemoveItem(index)}><i className="uil uil-times"></i></button>
                 </li>
             ))}
             {createChecklistItem &&
