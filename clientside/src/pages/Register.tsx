@@ -16,6 +16,7 @@ import { registerSchema } from "@/lib/validate"
 import { useForm } from "react-hook-form"
 import { z } from 'zod'
 import { useApp } from "@/components/AppProvider"
+import { Link } from "react-router-dom"
 
 type Input = z.infer<typeof registerSchema>; 
 
@@ -155,7 +156,9 @@ const Register = () => {
                     </form>
                 </Form>
             </CardContent>
-            <CardFooter className="flex justify-between">
+            <CardFooter className="flex gap-2 text-center">
+                <p className="">Already have an account?</p>
+                <Link to={'/login'}>Sign In</Link>
             </CardFooter>
         </Card>
     </div>

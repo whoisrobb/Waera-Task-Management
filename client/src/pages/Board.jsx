@@ -280,7 +280,7 @@ const CardItem = ({ card, deleteCard }) => {
                             readOnly
                             type="checkbox"
                         />
-                        <span style={{ backgroundColor: item.ItemComplete ? `rgb(${color})` : '' }} className="checkmark"></span>
+                        <span style={{ background: item.ItemComplete ? `rgb(${color})` : '' }} className="checkmark"></span>
                         {item.ChecklistItemText}
                     </div>
                   </li>

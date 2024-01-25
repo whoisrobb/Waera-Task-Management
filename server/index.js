@@ -14,7 +14,8 @@ app.use(cors());
 
 
 /* SEQUELIZE SETUP */
-sequelize.sync({ force: true })
+// sequelize.sync({ force: true })
+sequelize.sync()
     .then(() => {
         console.log('Database and tables synced')
     })

@@ -15,6 +15,7 @@ import { loginSchema } from "@/lib/validate"
 import { useForm } from "react-hook-form"
 import { z } from 'zod'
 import { useApp } from "@/components/AppProvider"
+import { Link } from "react-router-dom"
 
 type Input = z.infer<typeof loginSchema>;
 
@@ -36,8 +37,8 @@ const Login = () => {
         <div>
             <Card className="w-[350px]">
                 <CardHeader>
-                <CardTitle>Register</CardTitle>
-                <CardDescription>Start your journey today with Waera.</CardDescription>
+                <CardTitle>Login</CardTitle>
+                <CardDescription>Welcome back.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
@@ -81,7 +82,9 @@ const Login = () => {
                         </form>
                     </Form>
                 </CardContent>
-                <CardFooter className="flex justify-between">
+                <CardFooter className="flex gap-2 text-center">
+                    <p className="">Don't have an account?</p>
+                    <Link to={'/register'}>Sign Up</Link>
                 </CardFooter>
             </Card>
         </div>

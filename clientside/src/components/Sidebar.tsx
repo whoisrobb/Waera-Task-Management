@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom"
-import { CalendarIcon, DashboardIcon, GearIcon, TableIcon } from '@radix-ui/react-icons'
+import { CalendarIcon, DashboardIcon, EnvelopeOpenIcon, GearIcon, Pencil1Icon, TableIcon } from '@radix-ui/react-icons'
 import { Button } from "./ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useApp } from "./AppProvider"
@@ -19,6 +19,7 @@ import {
   } from "@/components/ui/form"
 import { Input } from "./ui/input"
 import { serverUrl } from "@/lib/utils"
+import { InboxIcon, NotebookIcon } from "lucide-react"
 
 type Input = z.infer<typeof boardSchema>;
 
@@ -78,6 +79,8 @@ const Sidebar = () => {
         <div className="">
             <p className="text-sm font-bold uppercase">workpace views</p>
             <div className="flex flex-col ml-4 text-muted-foreground">
+                <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><Pencil1Icon /> notes</Link>
+                <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><EnvelopeOpenIcon /> inbox</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><TableIcon /> table</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><CalendarIcon /> calendar</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><DashboardIcon /> kanban board</Link>
@@ -138,7 +141,7 @@ const Sidebar = () => {
             </div>
         </div>
         <div className="">
-            <button className="bg-accent border flex gap-2 items-center text-sm text-left w-full p-1 rounded overflow-hidden">
+            <button className="border flex gap-2 items-center text-sm text-left w-full p-1 rounded overflow-hidden hover:bg-accent hover:text-accent-foreground">
                 <Avatar>
                     <AvatarImage src="https://github.com/shadcn.png" />
                     <AvatarFallback>CN</AvatarFallback>
