@@ -34,7 +34,7 @@ const Login = () => {
     };
 
     return (
-        <div>
+        <div className='h-screen grid place-items-center'>
             <Card className="w-[350px]">
                 <CardHeader>
                 <CardTitle>Login</CardTitle>

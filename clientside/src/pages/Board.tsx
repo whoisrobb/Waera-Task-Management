@@ -1,15 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import Dropzone from 'react-dropzone';
 import { backgroundColor, randomColor, serverUrl } from '@/lib/utils';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { listSchema } from '@/lib/validate';
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { BookmarkIcon, CheckCircledIcon, ClockIcon, Cross2Icon, DotsVerticalIcon, Pencil2Icon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
+import { BookmarkIcon, CheckCircledIcon, ClockIcon, Cross2Icon, DotsVerticalIcon, DownloadIcon, ExternalLinkIcon, FileIcon, Pencil2Icon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import { Label } from '@radix-ui/react-label';
 import {
     Dialog,
@@ -26,12 +27,22 @@ import {
 import { Checkbox } from '@nextui-org/react';
 import CustomCheckbox from '@/components/checkbox/CustomCheckbox';
 
+
 type Board = {
     BoardID: string;
     BoardName: string;
     Description: string;
     TeamTeamID: any;
     UserUserID: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+type Attachment = {
+    AttachmentID: string;
+    CardCardID: string;
+    FileName: string;
+    FilePath: string;
     createdAt: string;
     updatedAt: string;
 }
@@ -74,6 +85,7 @@ type Card = {
     CardName: string;
     Checklists: any;
     Comments: any;
+    Attachments: Attachment[] | [];
     Description: string | null;
     DueDate: string | null;
     Labels: any;
@@ -408,12 +420,19 @@ const CardItem = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: (c
 
 const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: (cardId: string) => void; fetchLists: () => void }) => {
     const [activeDescription, setActiveDescription] = useState(false);
-    const [description, setDescription] = useState<string | null>(null);
+    const [description, setDescription] = useState<string | null>('');
     const [cardLabels, setCardLabels] = useState<Label[]>([]);
+    const [attachments, setAttachments] = useState<Attachment[]>([]);
     const [checklists, setChecklists] = useState<Checklist[]>([]);
     const [labels, setLabels] = useState<Label[]>([]);
     const [labelInput, setLabelInput] = useState('');
     const [createChecklistName, setCreateChecklistName] = useState('');
+    const [files, setFiles] = useState<File[]>([]);
+  
+    
+    const onDrop = (acceptedFiles: File[]) => {
+        setFiles(acceptedFiles);
+    };
 
     useEffect(() => {
         if (card) {
@@ -422,15 +441,41 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
         //     setCardId(card.CardID);
         //     setCardName(card.CardName);
             setChecklists(card.Checklists);
-        //     setSavedAttachments(card.Attachments);
+            setAttachments(card.Attachments);
         }
         fetchLabels()
     }, [])
+    
+    const handleFileSubmit = async (cardId: string) => {
+        const formData = new FormData();
+
+        files.forEach((file) => {
+            formData.append('file', file);
+        });
+
+        try {
+            const response = await fetch(`${serverUrl}/user/cards/attachments/${cardId}`, {
+                method: 'POST',
+                body: formData,
+        });
+        if (response.ok) {
+            setFiles([]);
+        }
+        } catch (err) {
+            console.error(err);
+        }
+    };
     
     const removeLabel = (index: number) => {
         const newLabels = [...cardLabels];
         newLabels.splice(index, 1);
         setCardLabels(newLabels);
+    };
+    
+    const removeFile = (index: number) => {
+        const newFiles = [...files];
+        newFiles.splice(index, 1);
+        setFiles(newFiles);
     };
 
     const fetchLabels = async () => {
@@ -497,13 +542,38 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
         }
     };
     
+    
+    const handleViewFile = (attachment: Attachment) => {
+        const fileType = attachment.FilePath.split('.').pop() || '';
+        const fileUrl = `${serverUrl}/${attachment.FilePath}`; // Adjust file access path
+
+        // Handle opening or downloading based on file type
+        if (['pdf', 'jpg', 'jpeg', 'png'].includes(fileType.toLowerCase())) {
+        // Open directly in browser for viewable files
+            window.open(fileUrl, '_blank');
+        } else {
+        // Trigger download for other file types
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.download = attachment.FileName;
+            link.click();
+        }
+    };
+
+    const downloadFile = (attachment: Attachment) => {
+        const fileUrl = `${serverUrl}/${attachment.FilePath}`; // Adjust file access path
+      
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.download = attachment.FileName;
+        link.click();
+      };
 
     // console.log(card.Checklists)
     return (
         <>
         <DialogHeader>
             <DialogTitle className=''>
-                <Button variant={'outline'} onClick={() => deleteCard(card.CardID)}><TrashIcon /></Button>
                 <p className="my-2">{card.CardName}</p>
             </DialogTitle>
             <DialogDescription className='flex gap-2'>
@@ -531,7 +601,45 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
                 <Button variant={'secondary'} className='capitalize text-muted-foreground hover:text-secondary-foreground'>dates</Button>
                 <Button variant={'secondary'} className='capitalize text-muted-foreground hover:text-secondary-foreground'>members</Button>
                 <Button variant={'secondary'} className='capitalize text-muted-foreground hover:text-secondary-foreground'>labels</Button>
-                <Button variant={'secondary'} className='capitalize text-muted-foreground hover:text-secondary-foreground'>attachments</Button>
+
+                <Popover>
+                    <PopoverTrigger>
+                        <Button variant={'secondary'} className='capitalize text-muted-foreground hover:text-secondary-foreground'>attachments</Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        <Dropzone onDrop={onDrop} accept="image/*,application/pdf">
+                        {({ getRootProps, getInputProps }) => (
+                            <section className='flex flex-col gap-2'>
+                                <div
+                                    {...getRootProps()}
+                                    className='p-6 border border-dashed cursor-pointer text-center rounded'
+                                >
+                                    <input {...getInputProps()} />
+                                    <p className='text-sm text-muted-foreground'>Drag 'n' drop some files here, or click to select files</p>
+                                </div>
+                                {files.length >= 1 &&
+                                    <div className="flex flex-col gap-1">
+                                        {files.map((file, index) => (
+                                            <div key={index} className="border py-1 px-2 rounded flex justify-between items-center">
+                                                <div className="leading-tight">
+                                                    <p className='text-sm text-muted-foreground'>{file.name}</p>
+                                                    <p className='font-bold text-muted-foreground'>{file.type}</p>
+                                                </div>
+                                                <button className='p-1 hover:bg-secondary rounded' onClick={() => removeFile(index)}><Cross2Icon /></button>
+                                            </div>
+                                        ))}
+                                    </div>}
+                                <Button onClick={() => handleFileSubmit(card.CardID)} disabled={files.length === 0}>
+                                    Upload Files
+                                </Button>
+                            </section>
+                        )}
+                        </Dropzone>
+                    </PopoverContent>
+                </Popover>
+
+                <Button variant={'outline'} onClick={() => deleteCard(card.CardID)} className='capitalize text-muted-foreground hover:text-secondary-foreground border-destructive text-destructive'>delete card</Button>
+        
             </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3">
@@ -560,7 +668,8 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
             </div>
 
             {/* labels */}
-            <div className="">
+            {/* {cardLabels.length >= 1 && */}
+            <>
                 <p className="flex items-center capitalize gap-2"><BookmarkIcon />labels</p>
                 <div className="flex items-center gap-2">
                     <Popover>
@@ -593,7 +702,6 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
                                 key={cardLabel.LabelID}
                                 style={{ backgroundColor: `#${cardLabel.Color}` }}
                                 className='inline-flex p-2 m-0 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
-                                // onClick={() => setCardLabels([...cardLabels, cardLabel])}
                             >
                                  <p className="flex items-center gap-1">
                                     {cardLabel.LabelName}
@@ -602,7 +710,27 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
                             </button>
                     ))}
                 </div>
-            </div>
+            </>
+            {/* } */}
+            
+
+            {/* Attachments */}
+            {attachments.length >= 1 &&
+            <>
+                <p className="flex items-center capitalize gap-2"><FileIcon />attachments</p>
+                <div className="flex flex-col gap-1">
+                    {attachments.map((file) => (
+                        <div className="border py-1 px-2 rounded" key={file.AttachmentID}>
+                            <p className="text-muted-foreground">{file.FileName}</p>
+                            <div className="flex gap-1">
+                                <button className='p-1 hover:bg-secondary rounded' onClick={() => handleViewFile(file)}><ExternalLinkIcon /></button>
+                                <button className='p-1 hover:bg-secondary rounded' onClick={() => downloadFile(file)}><DownloadIcon /></button>
+                                <button className='p-1 hover:bg-secondary rounded text-destructive'><TrashIcon /></button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </>}
 
             {/* Checklists */}
             {checklists.length >= 1 &&
@@ -656,15 +784,7 @@ const Checklist = ({ checklist, checklistIndex, updateChecklistItems }: { checkl
     <div className="">
         <p className="">{checklist.ChecklistName}</p>
             {checklistItems && checklistItems.map((item, index) => (
-                <li key={index} className='flex justify-between ml-4'>
-                    {/* <div className="flex gap-4">
-                        <input className="flex"
-                            checked={item.ItemComplete}
-                            onChange={() => handleToggleItem(index)}
-                            type="checkbox"
-                        />
-                        <p className='text-muted-foreground'>{item.ChecklistItemText}</p>
-                    </div> */}
+                <li key={index} className='flex justify-between ml-4 my-2'>
                     <Checkbox
                         isSelected={item.ItemComplete}
                         onValueChange={() => handleToggleItem(index)}
