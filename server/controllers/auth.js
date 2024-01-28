@@ -31,6 +31,8 @@ const createUser = async (req, res) => {
             {
                 userId: newUser.UserID,
                 username: newUser.Username,
+                firstName: newUser.FirstName,
+                lastName: newUser.LastName,
                 email: newUser.Email
             },
             process.env.JWT_SECRET
@@ -75,6 +77,8 @@ const loginUser = async (req, res) => {
             {
                 userId: user.UserID,
                 username: user.Username,
+                firstName: user.FirstName,
+                lastName: user.LastName,
                 email: user.Email
             },
             process.env.JWT_SECRET

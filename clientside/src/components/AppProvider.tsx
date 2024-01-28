@@ -5,12 +5,16 @@ import { serverUrl } from '@/lib/utils';
 
 type JwtPayload = {
   userId: string;
+  firstName: string;
+  lastName: string;
   username: string;
   email: string;
 }
 
 type AppContextValue = {
   user: JwtPayload | null;
+  sidebar: boolean;
+  toggleSidebar: () => void;
 //   setUser: React.Dispatch<React.SetStateAction<JwtPayload | null>>;
   handleLogout: () => void;
   handleRegister: (firstName: string, lastName: string, username: string, email: string, password: string) => Promise<void>;
@@ -19,6 +23,8 @@ type AppContextValue = {
 
 const AppContext = createContext<AppContextValue>({
   user: null,
+  sidebar: true,
+  toggleSidebar: () => {},
 //   setUser: () => {},
   handleLogout: () => {},
   handleRegister: async () => {},
@@ -38,6 +44,7 @@ export const useApp = () => {
 const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState<JwtPayload | null>(null);
+    const [sidebar, setSidebar] = useState(true);
 
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
@@ -50,7 +57,12 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
         setUser(null);
+        navigate('/login')
     };
+
+    const toggleSidebar = () => {
+      setSidebar((prev) => !prev)
+    }
   
     const handleRegister = async (firstName: string, lastName: string, username: string, email: string, password: string) => {
         try {
@@ -98,7 +110,7 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
 
   return (
-    <AppContext.Provider value={{ user, handleLogout, handleRegister, handleLogin }}>
+    <AppContext.Provider value={{ user, sidebar, toggleSidebar, handleLogout, handleRegister, handleLogin }}>
       {children}
     </AppContext.Provider>
   );

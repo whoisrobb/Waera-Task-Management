@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom"
-import { CalendarIcon, DashboardIcon, EnvelopeOpenIcon, GearIcon, Pencil1Icon, TableIcon } from '@radix-ui/react-icons'
+import { CalendarIcon, ChevronLeftIcon, DashboardIcon, EnvelopeOpenIcon, GearIcon, Pencil1Icon, TableIcon } from '@radix-ui/react-icons'
 import { Button } from "./ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useApp } from "./AppProvider"
@@ -19,13 +19,12 @@ import {
   } from "@/components/ui/form"
 import { Input } from "./ui/input"
 import { serverUrl } from "@/lib/utils"
-import { InboxIcon, NotebookIcon } from "lucide-react"
 
 type Input = z.infer<typeof boardSchema>;
 
 const Sidebar = () => {
     const navigate = useNavigate();
-    const { user } = useApp();
+    const { user, handleLogout, sidebar, toggleSidebar } = useApp();
     const form = useForm<Input>({
         resolver: zodResolver(boardSchema),
         defaultValues: {
@@ -60,23 +59,32 @@ const Sidebar = () => {
     };
 
   return (
-    // <div className="w-60 h-full border-r bg-gradient-to-t from-[rgba(168,39,167,0.1)] to-[rgba(141,141,215,0.05)] p-4 flex flex-col justify-between">
-    <div className="w-60 h-full border-r p-4 flex flex-col justify-between">
+    <div
+        style={ sidebar ? { display: '' } : { display: 'none' } }
+        className="w-[17rem] h-full border-r p-4 flex flex-col justify-between"
+    >
         <div className="">
-            <Link to={`#`} className="flex items-center">
+        <div className="border-b pb-2 mb-4 flex flex-col items-end">
+            <Link to={`/workspace/${user?.userId}`} className="flex items-center">
                 <i className="uil uil-books text-3xl text-blue-600"></i>
                 <p className="text-lg font-bold">WAERA MANAGER</p>
             </Link>
+            <button
+                onClick={toggleSidebar}
+                style={ sidebar ? { display: 'block' } : { display: 'none' } }
+                className='p-1 border hover:bg-secondary rounded-full'
+            ><ChevronLeftIcon /></button>
         </div>
-        <div className="">
+
+        <div className="my-4">
             <p className="text-sm font-bold uppercase">main</p>
             <div className="flex flex-col ml-4 text-muted-foreground">
-                <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><i className="uil uil-dashboard"></i> workspace</Link>
+                <Link to={`/workspace/${user?.userId}`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><i className="uil uil-dashboard"></i> workspace</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><i className="uil uil-user"></i> teams</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><GearIcon /> workspace settings</Link>
             </div>
         </div>
-        <div className="">
+        {/* <div className="">
             <p className="text-sm font-bold uppercase">workpace views</p>
             <div className="flex flex-col ml-4 text-muted-foreground">
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><Pencil1Icon /> notes</Link>
@@ -85,8 +93,8 @@ const Sidebar = () => {
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><CalendarIcon /> calendar</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><DashboardIcon /> kanban board</Link>
             </div>
-        </div>
-        <div className="">
+        </div> */}
+        <div className="my-4">
             <p className="text-sm font-bold uppercase">actions</p>
             <div className="flex flex-col ml-4 text-muted-foreground">
                 <Popover>
@@ -140,18 +148,38 @@ const Sidebar = () => {
                 <button className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded hover:text-accent-foreground"><CalendarIcon /> calendar</button>
             </div>
         </div>
-        <div className="">
-            <button className="border flex gap-2 items-center text-sm text-left w-full p-1 rounded overflow-hidden hover:bg-accent hover:text-accent-foreground">
-                <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+        </div>
 
-                <div className='leading-tight'>
-                    <p className="">{user?.username}</p>
-                    <p className="text-[12px] font-bold">{user?.email}</p>
-                </div>
-            </button>
+        <div className="w-full justify-end">
+            <Popover>
+                <PopoverTrigger className="w-full">
+                    <button className="border flex gap-2 items-center text-sm text-muted-foreground text-left w-full p-1 rounded overflow-hidden hover:bg-accent hover:text-accent-foreground">
+                        <Avatar>
+                            <AvatarImage src="https://github.com/shadcn.png" />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+
+                        <div className='leading-tight'>
+                            <p className="">{user?.username}</p>
+                            {/* <p className="text-[12px] font-bold">{user?.email}</p> */}
+                        </div>
+                    </button>
+                </PopoverTrigger>
+                <PopoverContent>
+                    <div className="flex gap-3 mb-2">
+                        <Avatar>
+                            <AvatarImage src="https://github.com/shadcn.png" />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <div className='leading-tight text-muted-foreground'>
+                            <p className="">{user?.username}</p>
+                            <p className="text-[12px] font-bold">{user?.email}</p>
+                        </div>
+                    </div>
+                    <hr />
+                    <button onClick={handleLogout} className='py-1 px-2 text-destructive w-full text-left hover:bg-secondary rounded'>sign out</button>
+                </PopoverContent>
+            </Popover>
         </div>
     </div>
   )

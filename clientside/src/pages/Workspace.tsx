@@ -38,18 +38,17 @@ const Workspace = () => {
     <div className='px-4 py-2'>
       
       <div className="">
-        <p className="capitalize text-lg font-bold">personal boards</p>
-        {userBoards &&
-            userBoards.map((board) => (
-                <Link key={board.BoardID} to={`/workspace/boards/${board.BoardID}`}>
-                  <p className="">{board.BoardName}</p>
+          {userBoards &&
+          <>
+            <p className="capitalize text-lg font-bold">personal boards</p>
+            <div className="flex">
+            {userBoards?.map((board) => (
+                <Link className='h-20 py-2 px-4 w-60 border text-muted-foreground hover:bg-secondary hover:text-accent-foreground' key={board.BoardID} to={`/workspace/boards/${board.BoardID}`}>
+                  <p className="text-lg">{board.BoardName}</p>
                 </Link>
-            ))
-        }
-      </div>
-
-      <div className="">
-        <p className="capitalize text-lg font-bold">team boards</p>
+            ))}
+            </div>
+          </>}
       </div>
     </div>
   )
