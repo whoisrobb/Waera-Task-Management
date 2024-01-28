@@ -323,7 +323,7 @@ const CardItem = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: (c
             </DialogTrigger>
             <DialogContent
                 // className="sm:max-w-[425px]"
-                className=" max-h-screen overflow-y-scroll scrollbar-hide"
+                className=" max-h-screen overflow-y-scroll scrollbar-hide mobile:max-w-screen"
             >
                 <ActiveCard
                     card={card}

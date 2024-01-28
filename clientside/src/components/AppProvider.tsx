@@ -44,7 +44,7 @@ export const useApp = () => {
 const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState<JwtPayload | null>(null);
-    const [sidebar, setSidebar] = useState(true);
+    const [sidebar, setSidebar] = useState(false);
 
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');

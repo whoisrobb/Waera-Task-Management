@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom"
-import { CalendarIcon, ChevronLeftIcon, DashboardIcon, EnvelopeOpenIcon, GearIcon, Pencil1Icon, TableIcon } from '@radix-ui/react-icons'
+import { CalendarIcon, ChevronLeftIcon, GearIcon } from '@radix-ui/react-icons'
 import { Button } from "./ui/button"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useApp } from "./AppProvider"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useApp } from "./AppProvider"
 import { useForm } from "react-hook-form"
 import { z } from 'zod'
 import { boardSchema } from "@/lib/validate"

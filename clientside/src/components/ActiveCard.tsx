@@ -178,7 +178,7 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
             <DialogTitle className=''>
                 <p className="my-2">{card.CardName}</p>
             </DialogTitle>
-            <DialogDescription className='flex gap-2'>
+            <DialogDescription className='flex gap-2 mobile:flex-wrap'>
                 <Popover>
                     <PopoverTrigger>
                         <Button variant={'secondary'} className='capitalize text-muted-foreground hover:text-secondary-foreground'>checklists</Button>
