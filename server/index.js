@@ -30,7 +30,7 @@ app.use('/team', teamRoutes);
 /*  DATABASE SETUP */
 require('dotenv').config();
 
-const conString = process.env.DATABASE_URL;
+const conString = process.env.DB_URL;
 const client = new pg.Client(conString);
 client.connect(function(err) {
   if(err) {
