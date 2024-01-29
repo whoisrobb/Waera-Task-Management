@@ -16,10 +16,13 @@ import { useForm } from "react-hook-form"
 import { z } from 'zod'
 import { useApp } from "@/components/AppProvider"
 import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { serverUrl } from "@/lib/utils"
 
 type Input = z.infer<typeof loginSchema>;
 
 const Login = () => {
+    const [data, setData] = useState(null)
     const { handleLogin } = useApp();
     const form = useForm<Input>({
         resolver: zodResolver(loginSchema),
@@ -33,8 +36,24 @@ const Login = () => {
         handleLogin(values.value, values.password);
     };
 
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`${serverUrl}/auth`);
+            const data = await response.json();
+            setData(data);
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+
     return (
         <div className='h-screen grid place-items-center'>
+            {data && JSON.stringify(data)}
             <Card className="w-[350px]">
                 <CardHeader>
                 <CardTitle>Login</CardTitle>

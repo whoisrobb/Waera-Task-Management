@@ -6,6 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const serverUrl = 'http://localhost:3000';
+// export const serverUrl = 'https://waera-task-management.onrender.com';
 
 export const randomColor = () => {
   let val = [];
