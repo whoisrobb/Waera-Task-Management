@@ -15,10 +15,11 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "postgres",
-    "password": "iamkharri",
+    "username": "whoisrobb",
+    "password": "eKgHw3Gla2QS",
     "database": "waera_production",
-    "host": "127.0.0.1",
+    "host": "ep-rapid-tooth-a5q6k566.us-east-2.aws.neon.tech/neondb?sslmode=require",
+    "port": "5432",
     "dialect": "postgres"
   }
 }
