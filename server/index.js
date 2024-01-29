@@ -5,6 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const teamRoutes = require('./routes/team');
+const { Pool } = require('pg');
 const pg = require('pg');
 // const { sequelize } = require('./models');
 // const config = require('./config.json');
@@ -30,20 +31,8 @@ app.use('/team', teamRoutes);
 /*  DATABASE SETUP */
 require('dotenv').config();
 
-const conString = process.env.DB_URL;
-const client = new pg.Client(conString);
-client.connect(function(err) {
-  if(err) {
-    return console.error('could not connect to postgres', err);
-  }
-  client.query('SELECT NOW() AS "theTime"', function(err, result) {
-    if(err) {
-      return console.error('error running query', err);
-    }
-    console.log(result.rows[0].theTime);
-    // >> output: 2018-08-23T14:02:57.117Z
-    client.end();
-  });
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
 });
 
 
