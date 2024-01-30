@@ -29,7 +29,6 @@ app.use('/team', teamRoutes);
 
 
 /*  DATABASE SETUP */
-const { Pool } = require('pg');
 require('dotenv').config();
 
 const pool = new Pool({
