@@ -29,29 +29,27 @@ app.use('/team', teamRoutes);
 
 
 /*  DATABASE SETUP */
-const postgres = require('postgres');
+const { Pool } = require('pg');
 require('dotenv').config();
 
-let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
-
-const sql = postgres({
-  host: PGHOST,
-  database: PGDATABASE,
-  username: PGUSER,
-  password: PGPASSWORD,
-  port: 5432,
-  ssl: 'require',
-  connection: {
-    options: `project=${ENDPOINT_ID}`,
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
   },
 });
 
-async function getPgVersion() {
-  const result = await sql`select version()`;
-  console.log(result);
-}
+// async function getPostgresVersion() {
+//   const client = await pool.connect();
+//   try {
+//     const response = await client.query('SELECT version()');
+//     console.log(response.rows[0]);
+//   } finally {
+//     client.release();
+//   }
+// }
 
-getPgVersion();
+// getPostgresVersion();
 
 const PORT = 3000;
 app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
