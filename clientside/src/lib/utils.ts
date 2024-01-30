@@ -5,8 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// export const serverUrl = 'http://localhost:3000';
-export const serverUrl = 'https://waera-task-management.onrender.com';
+export const serverUrl = 'http://localhost:3000';
+// export const serverUrl = 'https://waera-task-management.onrender.com';
 
 export const randomColor = () => {
   let val = [];
