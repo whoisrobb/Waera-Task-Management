@@ -1,5 +1,4 @@
 {
-    "target": "serverless",
     "build": {
         "cmd": "vite build"
     },
