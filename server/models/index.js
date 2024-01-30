@@ -12,18 +12,11 @@ const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
 let sequelize;
-// Create a connection pool with database credentials
+
 const pool = new Pool({
   connectionString: config.database,
-  username: config.username,
-  password: config.password,
 });
 
-// if (config.use_env_variable) {
-//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
-// } else {
-//   sequelize = new Sequelize(config.database, config.username, config.password, config);
-// }
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
