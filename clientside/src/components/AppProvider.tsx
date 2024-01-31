@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { serverUrl } from '@/lib/utils';
+import { useToast } from './ui/use-toast';
 
 type JwtPayload = {
   userId: string;
@@ -42,6 +43,7 @@ export const useApp = () => {
 };
 
 const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { toast } = useToast();
     const navigate = useNavigate();
     const [user, setUser] = useState<JwtPayload | null>(null);
     const [sidebar, setSidebar] = useState(false);
@@ -72,17 +74,31 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
                 body: JSON.stringify({ firstName, lastName, username, email, password }),
             });
             if (response.ok) {
-                const { token } = await response.json();
+                const { token, message } = await response.json();
                 localStorage.setItem('accessToken', token);
                 const userData = jwtDecode<JwtPayload>(token);
                 setUser(userData);
-                navigate(`/workspace/${userData.userId}`)
+                toast({
+                  title: `${message}`,
+                  description: `Logged in as ${userData.username}`,
+                });
+                navigate(`/workspace/${userData.userId}`);
             } else {
                 const errorData = await response.json();
                 console.error(errorData);
+                toast({
+                  variant: "destructive",
+                  title: "Something went wrong.",
+                  description: `${errorData.message}`,
+                });
             }
         } catch (err) {
-            console.error(err);
+            console.log(err);
+            toast({
+              variant: "destructive",
+              title: "Something went wrong.",
+              description: "Try Again",
+            });
         }
     };
   
@@ -95,17 +111,31 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             });
 
             if (response.ok) {
-                const { token } = await response.json();
+                const { token, message } = await response.json();
                 localStorage.setItem('accessToken', token);
                 const userData = jwtDecode<JwtPayload>(token);
                 setUser(userData);
+                toast({
+                  title: `${message}`,
+                  description: `Logged in as ${userData.username}`,
+                });
                 navigate(`/workspace/${userData.userId}`);
             } else {
                 const errorData = await response.json();
                 console.error(errorData);
+                toast({
+                  variant: "destructive",
+                  title: "Something went wrong.",
+                  description: `${errorData.message}`,
+                });
             }
         } catch (err) {
-            console.error(err);
+            console.log(err);
+            toast({
+              variant: "destructive",
+              title: "Something went wrong.",
+              description: "Try Again",
+            });
         }
     };
 

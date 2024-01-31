@@ -77,8 +77,17 @@ const Login = () => {
                                     </FormItem>
                                 )}
                             />
-    
-                            <Button type="submit">Submit</Button>
+
+                            <div className="flex gap-2 capitalize">
+                                <Button type="submit">submit</Button>
+                                <Button
+                                    variant={'secondary'}
+                                    type="button"
+                                    onClick={() => handleLogin('superman', 'krypton')}
+                                >
+                                    demo
+                                </Button>
+                            </div>
                         </form>
                     </Form>
                 </CardContent>
