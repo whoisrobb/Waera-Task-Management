@@ -4,8 +4,8 @@ export type BoardItem = {
     Description: string;
     TeamTeamID: any;
     UserUserID: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export type Attachment = {
@@ -13,32 +13,32 @@ export type Attachment = {
     CardCardID: string;
     FileName: string;
     FilePath: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export type ChecklistItem = {
     // ChecklistItemID: string;
     ChecklistItemText: string;
-    ItemComplete: Boolean;
-    // createdAt: string;
-    // updatedAt: string;
+    ItemComplete: boolean;
+    // createdAt: Date;
+    // updatedAt: Date;
 }
 
 export type Checklist = {
-    ChecklistID: string;
+    // ChecklistID: string;
     ChecklistName: string;
     // CardCardID: string;
-    ChecklistItems: ChecklistItem[];
-    // createdAt: string;
-    // updatedAt: string;
+    ChecklistItems: ChecklistItem[] | [];
+    // createdAt: Date;
+    // updatedAt: Date;
 }
 
 export type CardLabel = {
     CardCardID: string;
     LabelLabelID: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export type LabelItem = {
@@ -46,8 +46,8 @@ export type LabelItem = {
     Color: string;
     LabelID: string;
     LabelName: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export type Card = {
@@ -57,11 +57,11 @@ export type Card = {
     Comments: any;
     Attachments: Attachment[] | [];
     Description: string | null;
-    DueDate: string | null;
+    DueDate: Date | null;
     Labels: LabelItem[] | [];
     ListListID: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export type List = {
@@ -69,6 +69,6 @@ export type List = {
     Cards: Card[] | [];
     BoardBoardID: string;
     ListName: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }

@@ -13,13 +13,14 @@ import { Calendar } from "@/components/ui/calendar";
 import { BookmarkIcon, CheckCircledIcon, ClockIcon, Cross2Icon, DownloadIcon, ExternalLinkIcon, FileIcon, Pencil2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Checkbox } from "@nextui-org/react";
 
+
 const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: (cardId: string) => void; fetchLists: () => void }) => {
     const [activeDescription, setActiveDescription] = useState(false);
     const [description, setDescription] = useState<string | null>('');
     const [cardLabels, setCardLabels] = useState<LabelItem[]>([]);
     const [attachments, setAttachments] = useState<Attachment[]>([]);
     const [checklists, setChecklists] = useState<Checklist[]>([]);
-    const [dueDate, setDueDate] = useState<string | null>('');
+    const [dueDate, setDueDate] = useState<Date | null>(null);
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [labels, setLabels] = useState<LabelItem[]>([]);
     const [labelInput, setLabelInput] = useState('');
@@ -45,7 +46,9 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
     }, [])
 
     useEffect(() => {
-        setDueDate(date)
+        if (date) {
+            setDueDate(date)
+        }
     }, [date])
     
     const handleFileSubmit = async (cardId: string) => {
@@ -99,12 +102,10 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
                 },
                 body: JSON.stringify({ labelName: labelInput, color: randomColor() })
             })
-            .then((response) => {
-                if (response.ok) {
-                    setLabelInput('');
-                    fetchLabels();
-                }
-            })
+            if (response.ok) {
+                setLabelInput('');
+                fetchLabels();
+            }
         } catch (err) {
             console.error(err);
         }
@@ -189,7 +190,7 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
                             e.preventDefault();
                             setChecklists([...checklists, { ChecklistName: createChecklistName, ChecklistItems: [] }]);
                             setCreateChecklistName('');
-                            }}>
+                        }}>
                             <Input
                                 className='my-2'
                                 value={createChecklistName}
@@ -223,7 +224,7 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
                         <Button variant={'secondary'} className='capitalize text-muted-foreground hover:text-secondary-foreground'>attachments</Button>
                     </PopoverTrigger>
                     <PopoverContent>
-                        <Dropzone onDrop={onDrop} accept="image/*,application/pdf">
+                        <Dropzone onDrop={onDrop}>
                         {({ getRootProps, getInputProps }) => (
                             <section className='flex flex-col gap-2'>
                                 <div
@@ -254,7 +255,7 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
                     </PopoverContent>
                 </Popover>
 
-                <Button variant={'outline'} onClick={() => deleteCard(card.CardID)} className='capitalize text-muted-foreground hover:text-secondary-foreground border-destructive text-destructive'>delete card</Button>
+                <Button variant={'outline'} onClick={() => deleteCard(card.CardID)} className='capitalize hover:text-secondary-foreground border-destructive text-destructive'>delete card</Button>
         
             </DialogDescription>
         </DialogHeader>
@@ -272,7 +273,7 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
                 <p className="flex items-center capitalize gap-2"><Pencil2Icon />description</p>
                 {activeDescription ?
                     <div className='text-muted-foreground'>
-                        <ReactQuill value={description} onChange={(value) => setDescription(value)} />
+                        {description && <ReactQuill value={description} onChange={(value) => setDescription(value)} />}
                         <Button className='my-2' onClick={() => setActiveDescription(false)}>add</Button>
                     </div>
                     :

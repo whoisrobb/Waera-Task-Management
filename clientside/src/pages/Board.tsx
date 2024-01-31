@@ -75,7 +75,7 @@ const Board = () => {
 
     const handleCreateList = async (listName: string) => {
         try {
-          const response = await fetch(`${serverUrl}/user/lists/create/${boardId}`, {
+          await fetch(`${serverUrl}/user/lists/create/${boardId}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ const Board = () => {
     
     const handleCreateCard = async (cardName: string, listId: string) => {
         try {
-          const response = await fetch(`${serverUrl}/user/cards/create/${listId}`, {
+          await fetch(`${serverUrl}/user/cards/create/${listId}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ const Board = () => {
 
     const deleteList = async (listId: string) => {
         try {
-            const response = await fetch(`${serverUrl}/user/lists/delete/${listId}`, {
+            await fetch(`${serverUrl}/user/lists/delete/${listId}`, {
                 method: 'DELETE'
             })
             .then((response) => {
@@ -129,7 +129,7 @@ const Board = () => {
 
     const deleteCard = async (cardId: string) => {
         try {
-            const response = await fetch(`${serverUrl}/user/cards/delete/${cardId}`, {
+            await fetch(`${serverUrl}/user/cards/delete/${cardId}`, {
                 method: 'DELETE'
             })
             .then((response) => {
@@ -293,24 +293,20 @@ const CardItem = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: (c
                     </p>}
                     
                     {/* description */}
+                    {card.Description &&
                     <div className="">
                         <div className='text-muted-foreground leading-tight' dangerouslySetInnerHTML={{ __html: card.Description }}/>
-                    </div>
+                    </div>}
 
                     {/* checklists */}
-                    {card.Checklists.map((checklist: Checklist) => (
-                    <div className="" key={checklist.ChecklistID}>
+                    {card.Checklists.map((checklist: Checklist, index: number) => (
+                    <div className="" key={index}>
                         <p>{checklist.ChecklistName}</p>
                         {card.Checklists &&
                         <ul>
                         {checklist.ChecklistItems.map((item, index) => (
                             <li key={index} className='ml-4'>
                                 <div className="text-muted-foreground flex gap-2">
-                                    {/* <input
-                                        checked={item.ItemComplete}
-                                        readOnly
-                                        type="checkbox"
-                                    /> */}
                                     <CustomCheckbox complete={item.ItemComplete} color={color} />
                                     <p className="">{item.ChecklistItemText}</p>
                                 </div>

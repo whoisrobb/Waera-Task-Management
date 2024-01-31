@@ -1,6 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Route, Navigate, Routes } from 'react-router-dom';
-import AppProvider, { useApp } from './components/AppProvider';
+import { Route, Routes } from 'react-router-dom';
+import AppProvider from './components/AppProvider';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import WorkspaceLayout from './components/WorkspaceLayout';
