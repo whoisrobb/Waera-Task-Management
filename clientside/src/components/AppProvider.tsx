@@ -9,6 +9,7 @@ type JwtPayload = {
   firstName: string;
   lastName: string;
   username: string;
+  initials: string;
   email: string;
 }
 

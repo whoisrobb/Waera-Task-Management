@@ -4,6 +4,15 @@ const jwt = require("jsonwebtoken");
 const User = db.User;
 
 
+/* GET INITIALS */
+const initials = (str1, str2) => {
+    if (!str1 || !str2) {
+      return "";
+    }
+    return str1[0].toUpperCase() + str2[0].toUpperCase();
+ }
+
+
 /* GET ALL USERS */
 const getAllUsers = async (req, res) => {
     try {
@@ -33,7 +42,8 @@ const createUser = async (req, res) => {
                 username: newUser.Username,
                 firstName: newUser.FirstName,
                 lastName: newUser.LastName,
-                email: newUser.Email
+                email: newUser.Email,
+                initials: initials(newUser.FirstName, newUser.LastName)
             },
             process.env.JWT_SECRET
         );
@@ -49,11 +59,6 @@ const loginUser = async (req, res) => {
     try {
         const { value, password } = req.body;
 
-        // const user = await User.findOne({ 
-        //     where: {
-        //         $or: [{ username: value }, { email: value }]
-        //     }
-        // });
         const user = await User.findOne({
             where: {
                 [Op.or]: [
@@ -79,7 +84,8 @@ const loginUser = async (req, res) => {
                 username: user.Username,
                 firstName: user.FirstName,
                 lastName: user.LastName,
-                email: user.Email
+                email: user.Email,
+                initials: initials(user.FirstName, user.LastName)
             },
             process.env.JWT_SECRET
         );

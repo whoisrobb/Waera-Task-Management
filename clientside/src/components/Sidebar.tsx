@@ -155,8 +155,8 @@ const Sidebar = () => {
                 <PopoverTrigger className="w-full">
                     <button className="border flex gap-2 items-center text-sm text-muted-foreground text-left w-full p-1 rounded overflow-hidden hover:bg-accent hover:text-accent-foreground">
                         <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>CN</AvatarFallback>
+                            <AvatarImage src="#" />
+                            <AvatarFallback>{user?.initials}</AvatarFallback>
                         </Avatar>
 
                         <div className='leading-tight'>
@@ -168,8 +168,8 @@ const Sidebar = () => {
                 <PopoverContent>
                     <div className="flex gap-3 mb-2">
                         <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>CN</AvatarFallback>
+                            <AvatarImage src="#" />
+                            <AvatarFallback>{user?.initials}</AvatarFallback>
                         </Avatar>
                         <div className='leading-tight text-muted-foreground'>
                             <p className="">{user?.username}</p>
