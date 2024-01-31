@@ -83,7 +83,7 @@ const Login = () => {
                                 <Button
                                     variant={'secondary'}
                                     type="button"
-                                    onClick={() => handleLogin('superman', 'krypton')}
+                                    onClick={() => handleLogin('iamironman', 'howardpotts')}
                                 >
                                     demo
                                 </Button>
