@@ -1,11 +1,10 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import AppProvider from './components/AppProvider';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import WorkspaceLayout from './components/WorkspaceLayout';
 import Workspace from './pages/Workspace';
 import Board from './pages/Board';
-import Home from './pages/Home';
 import { Toaster } from './components/ui/toaster';
 
 function App() {
@@ -13,7 +12,7 @@ function App() {
     <AppProvider>
       <Routes>
         <Route path="/">
-          <Route index element={<Home />} />
+          <Route index element={<Navigate to="/login" replace />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
 

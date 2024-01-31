@@ -56,7 +56,7 @@ export type Card = {
     Checklists: any;
     Comments: any;
     Attachments: Attachment[] | [];
-    Description: string | null;
+    Description: string | undefined;
     DueDate: Date | null;
     Labels: LabelItem[] | [];
     ListListID: string;

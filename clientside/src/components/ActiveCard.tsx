@@ -16,7 +16,7 @@ import { Checkbox } from "@nextui-org/react";
 
 const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: (cardId: string) => void; fetchLists: () => void }) => {
     const [activeDescription, setActiveDescription] = useState(false);
-    const [description, setDescription] = useState<string | null>('');
+    const [description, setDescription] = useState<string | undefined>('');
     const [cardLabels, setCardLabels] = useState<LabelItem[]>([]);
     const [attachments, setAttachments] = useState<Attachment[]>([]);
     const [checklists, setChecklists] = useState<Checklist[]>([]);
@@ -121,7 +121,7 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
         handleUpdateCard(card.CardID, description, checklists, cardLabels);
     }, [description, checklists, cardLabels, date])
     
-    const handleUpdateCard = async (cardId: string, description: string | null, checklists: Checklist[], cardLabels: LabelItem[]) => {
+    const handleUpdateCard = async (cardId: string, description: string | undefined, checklists: Checklist[], cardLabels: LabelItem[]) => {
         try {
             const response = await fetch(`${serverUrl}/user/cards/updateCard/${cardId}`, {
             method: 'PUT',
@@ -273,7 +273,7 @@ const ActiveCard = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: 
                 <p className="flex items-center capitalize gap-2"><Pencil2Icon />description</p>
                 {activeDescription ?
                     <div className='text-muted-foreground'>
-                        {description && <ReactQuill value={description} onChange={(value) => setDescription(value)} />}
+                        <ReactQuill value={description} onChange={(value) => setDescription(value)} />
                         <Button className='my-2' onClick={() => setActiveDescription(false)}>add</Button>
                     </div>
                     :
