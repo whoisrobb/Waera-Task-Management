@@ -79,6 +79,7 @@ const getLists = async (req, res) => {
                         },
                     ],
                 }],
+                order: [['createdAt', 'ASC']],
             });
 
         res.status(200).json(lists);
