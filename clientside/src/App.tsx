@@ -5,12 +5,14 @@ import Register from './pages/Register';
 import WorkspaceLayout from './components/WorkspaceLayout';
 import Workspace from './pages/Workspace';
 import Board from './pages/Board';
+import Home from './pages/Home';
 
 function App() {
   return (
     <AppProvider>
       <Routes>
         <Route path="/">
+          <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
 
