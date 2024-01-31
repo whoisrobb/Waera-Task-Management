@@ -78,6 +78,7 @@ const getLists = async (req, res) => {
                             through: 'CardLabels',
                         },
                     ],
+                    order: [['createdAt', 'ASC']],
                 }],
                 order: [['createdAt', 'ASC']],
             });
@@ -168,15 +169,6 @@ const updateCardBulk = async (req, res) => {
             DueDate: req.body.dueDate,
             // Add other fields as needed
         });
-
-        // Update or create attachments
-        // await Attachment.destroy({ where: { CardCardID: cardId } });
-        // const attachments = req.body.attachments || [];
-        // await Attachment.bulkCreate(attachments.map((attachment) => ({
-        //     FileName: attachment.fileName,
-        //     FilePath: attachment.filePath,
-        //     CardCardId: cardId,
-        // })));
 
         // Update or create checklists
         await Checklist.destroy({ where: { CardCardID: cardId } });
