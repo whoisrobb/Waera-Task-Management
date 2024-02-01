@@ -226,11 +226,11 @@ const CardItem = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: (c
 
   return (
         <Dialog>
-            <div style={bgStyles} className="border rounded py-2">
+            <div style={bgStyles} className="border rounded py-2 text-sm">
 
                 <div className="flex px-2 justify-between items-baseline">
                     <div className="flex items-center justify-between">
-                        <p className="text-lg font-bold">{card.CardName}</p>
+                        <p className="text-lg font-bold leading-tight">{card.CardName}</p>
                                 {/* <Checkbox /> */}
                     </div>
                     

@@ -23,10 +23,10 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 17px;
-    width: 17px;
+    height: 15px;
+    width: 15px;
     background-color: #eee;
-    border-radius: 7px;
+    border-radius: 6px;
     /* border-radius: 50%; */
     transition: background-color 0.3s;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -36,8 +36,8 @@
     content: "";
     position: absolute;
     display: none;
-    left: 6px;
-    top: 3px;
+    left: 5px;
+    top: 2px;
     width: 5px;
     height: 10px;
     border: solid white;
