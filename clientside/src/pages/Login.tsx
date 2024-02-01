@@ -16,11 +16,16 @@ import { useForm } from "react-hook-form"
 import { z } from 'zod'
 import { useApp } from "@/components/AppProvider"
 import { Link } from "react-router-dom"
+import { useState } from "react"
+import { Spinner } from "@nextui-org/react"
 
 type Input = z.infer<typeof loginSchema>;
 
 const Login = () => {
     const { handleLogin } = useApp();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [demoIsSubmitting, setDemoIsSubmitting] = useState(false);
+
     const form = useForm<Input>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -29,8 +34,10 @@ const Login = () => {
         }
     });
 
-    const onSubmit = (values: Input) => {
-        handleLogin(values.value, values.password);
+    const onSubmit = async (values: Input) => {
+        setIsSubmitting(true);
+        await handleLogin(values.value, values.password);
+        setIsSubmitting(false);
     };
 
     return (
@@ -79,13 +86,21 @@ const Login = () => {
                             />
 
                             <div className="flex gap-2 capitalize">
-                                <Button type="submit">submit</Button>
+                                {/* <Button type="submit">submit</Button> */}
+                                <Button type="submit" disabled={isSubmitting}>
+                                    {isSubmitting ? <div className="flex items-center gap-2"><Spinner color="default" size="sm" /><p className="italic">Signing in</p></div>
+                                    : <p>Submit</p>
+                                    }
+                                </Button>
                                 <Button
+                                    disabled={demoIsSubmitting}
                                     variant={'secondary'}
                                     type="button"
-                                    onClick={() => handleLogin('iamironman', 'howardpotts')}
+                                    onClick={async () => {setDemoIsSubmitting(true); await handleLogin('iamironman', 'howardpotts'); setDemoIsSubmitting(false);}}
                                 >
-                                    demo
+                                    {demoIsSubmitting ? <div className="flex items-center gap-2"><Spinner color="default" size="sm" /><p className="italic">Signing in</p></div>
+                                    : <p>Demo</p>
+                                    }
                                 </Button>
                             </div>
                         </form>

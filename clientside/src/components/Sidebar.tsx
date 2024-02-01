@@ -1,62 +1,12 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { CalendarIcon, ChevronLeftIcon, GearIcon } from '@radix-ui/react-icons'
-import { Button } from "./ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useApp } from "./AppProvider"
-import { useForm } from "react-hook-form"
-import { z } from 'zod'
-import { boardSchema } from "@/lib/validate"
-import {
-    Form,
-    FormControl,
-    // FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-  } from "@/components/ui/form"
-import { Input } from "./ui/input"
-import { serverUrl } from "@/lib/utils"
-
-type Input = z.infer<typeof boardSchema>;
+import CreateBoard from "@/forms/createBoard"
 
 const Sidebar = () => {
-    const navigate = useNavigate();
     const { user, handleLogout, sidebar, toggleSidebar } = useApp();
-    const form = useForm<Input>({
-        resolver: zodResolver(boardSchema),
-        defaultValues: {
-            boardName: '',
-            description: ''
-        }
-    });
-
-    const onSubmit = (values: Input) => {
-        handleBoardCreate(values.boardName, values.description);
-    };
-    
-    const handleBoardCreate = async (boardName: string, description: string) => {
-        const formData = { boardName, description, userId: user?.userId }
-        try {
-            const response = await fetch(`${serverUrl}/user/boards/create`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-            if (response.ok) {
-                const responseData = await response.json();
-                navigate(`/workspace/boards/${responseData.BoardID}`);
-            } else {
-                console.error(response.status, response.statusText);
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    };
 
   return (
     <div
@@ -102,46 +52,7 @@ const Sidebar = () => {
                         <button className="capitalize flex w-full items-center gap-2 hover:bg-accent p-1 rounded hover:text-accent-foreground"><i className="uil uil-create-dashboard"></i> create board</button>
                     </PopoverTrigger>
                     <PopoverContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-    
-                            <FormField
-                                control={form.control}
-                                name="boardName"
-                                render={({ field }) => (
-                                    <FormItem>
-                                    <FormLabel>Board name</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Board name" {...field} />
-                                    </FormControl>
-                                    {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
-                                    <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-    
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem>
-                                    <FormLabel>Description</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Description" {...field} />
-                                    </FormControl>
-                                    {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
-                                    <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-    
-                            <Button type="submit">Submit</Button>
-                        </form>
-                    </Form>
+                        <CreateBoard />
                     </PopoverContent>
                 </Popover>
 

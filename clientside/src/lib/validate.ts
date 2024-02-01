@@ -35,6 +35,5 @@ export const listSchema = z.object({
 });
 
 export const cardSchema = z.object({
-    cardName: z.string().min(3).max(255),
-    listId: z.string()
+    cardName: z.string().min(3).max(255)
 });

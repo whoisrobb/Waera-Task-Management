@@ -2,10 +2,11 @@ export type BoardItem = {
     BoardID: string;
     BoardName: string;
     Description: string;
-    TeamTeamID: any;
+    TeamTeamID: string | null;
     UserUserID: string;
     createdAt: Date;
     updatedAt: Date;
+//   CreatorUserID: string | null;
 }
 
 export type Attachment = {

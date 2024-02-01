@@ -1,16 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { backgroundColor, formatDate, serverUrl } from '@/lib/utils';
-import { zodResolver } from "@hookform/resolvers/zod"
-import { listSchema } from '@/lib/validate';
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
-import { z } from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { ClockIcon, DotsVerticalIcon, PlusIcon } from '@radix-ui/react-icons';
-import { Label } from '@radix-ui/react-label';
+import { useEffect, useState } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { ClockIcon, DotsVerticalIcon, PlusIcon, Share1Icon, TrashIcon } from '@radix-ui/react-icons';
 import {
     Dialog,
     DialogContent,
@@ -22,23 +15,19 @@ import {
 import CustomCheckbox from '@/components/checkbox/CustomCheckbox';
 import ActiveCard from '@/components/ActiveCard';
 import { BoardItem, Card, Checklist, LabelItem, List } from '@/lib/types';
+import CreateList from '@/forms/CreateList';
+import CreateCard from '@/forms/CreateCard';
+import { toast } from '@/components/ui/use-toast';
+import { useApp } from '@/components/AppProvider';
 
-
-type ListInput = z.infer<typeof listSchema>;
 
 const Board = () => {
     const { boardId } = useParams();
-    const listForm = useForm<ListInput>({
-        resolver: zodResolver(listSchema),
-        defaultValues: {
-            listName: '',
-        }
-    });
+    const { user } = useApp();
+    const navigate = useNavigate();
 
     const [boardDetails, setBoardDetail] = useState<BoardItem | null>(null);
     const [lists, setLists] = useState<List[] | null>(null);
-    // const [listName, setListName] = useState('');
-    const [cardName, setCardName] = useState('');
 
     useEffect(() => {
       fetchBoard();
@@ -65,50 +54,29 @@ const Board = () => {
       }
     };
 
-    const onListSubmit = (values: ListInput) => {
-        handleCreateList(values.listName);
-    };
-
-    const onCardSubmit = (listId: string) => {
-        handleCreateCard(cardName, listId);
-    };
-
-    const handleCreateList = async (listName: string) => {
+    const deleteBoard = async () => {
         try {
-          await fetch(`${serverUrl}/user/lists/create/${boardId}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ listName })
-          })
-          .then((response) => {
-            if (response.ok) {
-            //   const data = response.json();
-              fetchLists();
-            }
-          })
+            await fetch(`${serverUrl}/user/boards/delete/${boardId}`, {
+                method: 'DELETE'
+            })
+            .then((response) => {
+                if (response.ok) {
+                    toast({
+                        variant: 'destructive',
+                        description: 'Deleted Board successfully',
+                    });
+                    fetchLists();
+                    navigate(`/workspace/${user?.userId}`);
+                } else {
+                    toast({
+                        variant: 'destructive',
+                        title: 'Failed!',
+                        description: 'Something went wrong.',
+                    });
+                }
+            })
         } catch (err) {
-          console.error(err);
-        }
-    };
-    
-    const handleCreateCard = async (cardName: string, listId: string) => {
-        try {
-          await fetch(`${serverUrl}/user/cards/create/${listId}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ cardName })
-          })
-          .then((response) => {
-            if (response.ok) {
-              fetchLists();
-            }
-          })
-        } catch (err) {
-          console.error(err);
+            console.error(err);
         }
     };
 
@@ -119,7 +87,17 @@ const Board = () => {
             })
             .then((response) => {
                 if (response.ok) {
-                    fetchLists() 
+                    toast({
+                        variant: 'destructive',
+                        description: 'Deleted List successfully',
+                    });
+                    fetchLists();
+                } else {
+                    toast({
+                        variant: 'destructive',
+                        title: 'Failed!',
+                        description: 'Something went wrong.',
+                    });
                 }
             })
         } catch (err) {
@@ -134,7 +112,17 @@ const Board = () => {
             })
             .then((response) => {
                 if (response.ok) {
+                    toast({
+                        variant: 'destructive',
+                        description: 'Deleted Card successfully',
+                    });
                     fetchLists();
+                } else {
+                    toast({
+                        variant: 'destructive',
+                        title: 'Failed!',
+                        description: 'Something went wrong.',
+                    });
                 }
             })
         } catch (err) {
@@ -144,8 +132,21 @@ const Board = () => {
 
   return (
     <div className='px-4 py-2 w-full h-full overflow-scroll'>
-        <div className="border p-2 rounded">
-            <p className="">{boardDetails?.BoardName}</p>
+        <div className="border p-2 rounded flex justify-between items-baseline">
+            <div>
+                <p className="">{boardDetails?.BoardName}</p>
+                <p className="text-sm text-muted-foreground">{boardDetails?.Description}</p>
+            </div>
+            <Popover>
+                <PopoverTrigger>
+                    <button className='p-1 hover:bg-secondary rounded'><DotsVerticalIcon /></button>
+                </PopoverTrigger>
+                <PopoverContent className='w-48 p-2'>
+                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground'><div className="flex items-center gap-2"><Share1Icon />share board</div></button>
+                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground'><div className="flex items-center gap-2"><PlusIcon />create new list</div></button>
+                    <button className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b]'><div className="flex items-center gap-2" onClick={deleteBoard}><TrashIcon />delete board</div></button>
+                </PopoverContent>
+            </Popover>
         </div>
         <div className="my-2 flex gap-2 items-start">
             {/* lists */}
@@ -159,11 +160,7 @@ const Board = () => {
                                     <button className='p-1 hover:bg-secondary rounded'><PlusIcon /></button>
                                 </PopoverTrigger>
                                 <PopoverContent>
-                                    <form onSubmit={(e) => {e.preventDefault(); onCardSubmit(list.ListID);}}>
-                                        <Label>Create new card</Label>
-                                        <Input className='my-2' value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder='Card Name' />
-                                        <Button>Submit</Button>
-                                    </form>
+                                    <CreateCard listId={list.ListID} fetchLists={fetchLists} />
                                 </PopoverContent>
                             </Popover>
 
@@ -199,29 +196,7 @@ const Board = () => {
                     <Button variant={'secondary'} className='w-[15rem]'>Create list</Button>
                 </PopoverTrigger>
                 <PopoverContent>
-                    <Form {...listForm}>
-                        <form onSubmit={listForm.handleSubmit(onListSubmit)} className="space-y-2">
-    
-                            <FormField
-                                control={listForm.control}
-                                name="listName"
-                                render={({ field }) => (
-                                    <FormItem>
-                                    <FormLabel>Create a new list</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="List name" {...field} />
-                                    </FormControl>
-                                    {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
-                                    <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <Button type="submit">Submit</Button>
-                        </form>
-                    </Form>
+                    <CreateList boardId={boardId} fetchLists={fetchLists} />
                 </PopoverContent>
             </Popover>
 
@@ -253,7 +228,7 @@ const CardItem = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: (c
         <Dialog>
             <div style={bgStyles} className="border rounded py-2">
 
-                <div className="flex px-2 justify-between">
+                <div className="flex px-2 justify-between items-baseline">
                     <div className="flex items-center justify-between">
                         <p className="text-lg font-bold">{card.CardName}</p>
                                 {/* <Checkbox /> */}

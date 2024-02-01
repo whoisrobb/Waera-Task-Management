@@ -17,11 +17,14 @@ import { useForm } from "react-hook-form"
 import { z } from 'zod'
 import { useApp } from "@/components/AppProvider"
 import { Link } from "react-router-dom"
+import { useState } from "react"
+import { Spinner } from "@nextui-org/react"
 
 type Input = z.infer<typeof registerSchema>; 
 
 const Register = () => {
     const { handleRegister } = useApp();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const form = useForm<Input>({
         resolver: zodResolver(registerSchema),
@@ -35,13 +38,15 @@ const Register = () => {
         }
     });
 
-    const onSubmit = (values: Input) => {
-        handleRegister(values.firstName, values.lastName, values.username, values.email, values.password)
+    const onSubmit = async (values: Input) => {
+        setIsSubmitting(true);
+        await handleRegister(values.firstName, values.lastName, values.username, values.email, values.password);
+        setIsSubmitting(false);
     };
 
   return (
-    <div>
-        <Card className="w-[350px]">
+    <div className="min-h-screen flex justify-center">
+        <Card className="w-[400px] my-12">
             <CardHeader>
             <CardTitle>Register</CardTitle>
             <CardDescription>Start your journey today with Waera.</CardDescription>
@@ -152,7 +157,11 @@ const Register = () => {
                             )}
                         />
 
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? <div className="flex items-center gap-2"><Spinner color="default" size="sm" /><p className="italic">Submitting</p></div>
+                            : <p>Submit</p>
+                            }
+                        </Button>
                     </form>
                 </Form>
             </CardContent>
