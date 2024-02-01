@@ -3,7 +3,7 @@ import { CalendarIcon, ChevronLeftIcon, GearIcon } from '@radix-ui/react-icons'
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { useApp } from "./AppProvider"
-import CreateBoard from "@/forms/createBoard"
+import CreateBoard from "@/forms/CreateBoard"
 
 const Sidebar = () => {
     const { user, handleLogout, sidebar, toggleSidebar } = useApp();

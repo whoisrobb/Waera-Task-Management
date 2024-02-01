@@ -3,8 +3,8 @@ import { serverUrl } from '@/lib/utils';
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import CreateBoard from '@/forms/createBoard';
 import { BoardItem } from '@/lib/types';
+import CreateBoard from '@/forms/CreateBoard';
 
 
 const Workspace = () => {
