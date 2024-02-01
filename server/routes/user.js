@@ -45,5 +45,4 @@ router.delete('/lists/delete/:listId', deleteList);
 /* DELETE CARD */
 router.delete('/cards/delete/:cardId', deleteCard);
 
-
 module.exports = router;

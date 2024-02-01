@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { backgroundColor, formatDate, serverUrl } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ClockIcon, DotsVerticalIcon, PlusIcon, Share1Icon, TrashIcon } from '@radix-ui/react-icons';
 import {
     Dialog,
