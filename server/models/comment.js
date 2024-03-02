@@ -16,6 +16,7 @@ module.exports = ((sequelize, DataTypes) => {
 
     Comment.associate = (models) => {
         Comment.belongsTo(models.Card);
+        Comment.belongsTo(models.User, { foreignKey: 'CommentorID' });
     };
 
     return Comment;

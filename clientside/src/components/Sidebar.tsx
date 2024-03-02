@@ -29,7 +29,7 @@ const Sidebar = () => {
         <div className="my-4">
             <p className="text-sm font-bold uppercase">main</p>
             <div className="flex flex-col ml-4 text-muted-foreground">
-                <Link to={`/workspace/${user?.userId}`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><i className="uil uil-dashboard"></i> workspace</Link>
+                <Link to={`/workspace/${user?.userId}`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded"><i className="uil uil-dashboard"></i> workspace</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><i className="uil uil-user"></i> teams</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><GearIcon /> workspace settings</Link>
             </div>
@@ -41,7 +41,6 @@ const Sidebar = () => {
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><EnvelopeOpenIcon /> inbox</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><TableIcon /> table</Link>
                 <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><CalendarIcon /> calendar</Link>
-                <Link to={`#`} className="capitalize flex items-center gap-2 hover:bg-accent p-1 rounded "><DashboardIcon /> kanban board</Link>
             </div>
         </div> */}
         <div className="my-4">

@@ -48,7 +48,7 @@ const createUser = async (req, res) => {
             process.env.JWT_SECRET
         );
 
-        res.status(201).json({ message: 'Success!', token });
+        res.status(201).json({ message: `Successfully signed in as ${newUser.Username}`, token });
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -90,7 +90,7 @@ const loginUser = async (req, res) => {
             process.env.JWT_SECRET
         );
 
-        res.status(200).json({ message: 'Success!', token });
+        res.status(200).json({ message: `Successfully signed in as ${user.Username}`, token });
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
