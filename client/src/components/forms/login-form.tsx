@@ -87,9 +87,8 @@ const SignInForm = () => {
                             <div className="flex gap-2 capitalize">
                                 {/* <Button type="submit">submit</Button> */}
                                 <Button type="submit" disabled={isSubmitting}>
-                                    {isSubmitting ? <div className="flex items-center gap-2"><p className="italic">Signing in</p></div>
-                                    : <p>Submit</p>
-                                    }
+                                    {isSubmitting ? 'Signing in'
+                                    : 'Submit'}
                                 </Button>
                                 {/* <Button
                                     disabled={demoIsSubmitting}
