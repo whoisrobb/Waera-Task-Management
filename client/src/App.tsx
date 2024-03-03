@@ -18,7 +18,7 @@ function App() {
           <Route path="workspace/boards/:boardId" element={<Board />} />
         </Route>
       </Routes>
-      <Toaster />
+      <Toaster richColors />
     </div>
   )
 }

@@ -52,7 +52,6 @@ module.exports = ((sequelize, DataTypes) => {
 
     User.associate = (models) => {
         User.hasMany(models.Board, { foreignKey: 'CreatorUserID' });
-        User.hasMany(models.Comment, { foreignKey: 'CommentorID' });
         User.belongsToMany(models.Team, { through: 'UserTeams' });
     };
 

@@ -1,6 +1,6 @@
-import { sidebarNav } from "@/lib/side-bar"
+import { sidebarNav } from "@/lib/side-bar";
 import { cn } from "@/lib/utils";
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom";
 
 const SidebarContent = () => {
     const { pathname } = useLocation();
@@ -13,7 +13,7 @@ const SidebarContent = () => {
             {nav.items.map((item, index) => (
               <Link to={item.href} key={index} className={cn(
                 "text-muted-foreground capitalize py-1 px-2 w-full ml-2 flex gap-2",
-                pathname.includes(item.title) && 'text-primary font-bold'
+                pathname.includes(item.title) && 'text-primary font-bold bg-secondary'
               )}>{item.title}</Link>
             ))}
           </div>
