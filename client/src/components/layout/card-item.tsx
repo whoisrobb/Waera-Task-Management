@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Card, Checklist, LabelItem } from "@/lib/types";
 import { backgroundColor, formatDate } from "@/lib/utils";
 import CustomCheckbox from "../checkbox/CustomCheckbox";
+import { deleteCard } from "@/server-functions/card";
 
 const CardItem = ({ card, getData }: { card: Card; getData: () => void }) => {
     const [color, setColor] = useState<string | null>(null);
@@ -38,7 +39,10 @@ const CardItem = ({ card, getData }: { card: Card; getData: () => void }) => {
                         <PopoverContent className='w-48 p-2'>
                             <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground' onClick={bgClr}>change color</button>
                             <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground'>placeholder</button>
-                            <button className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b]'>delete card</button>
+                            <button
+                                className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b]'
+                                onClick={() => deleteCard({ valueId: card.CardID, getData })}
+                            >delete card</button>
                         </PopoverContent>
                     </Popover>
                 </div>

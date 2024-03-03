@@ -28,3 +28,21 @@ export const handleCreateCard = async ({ cardName, valueId, getData }: CreateCar
         toast('Something went wrong!');
     }
 };
+
+export const deleteCard = async ({ valueId, getData }: ListProps) => {
+    try {
+        await fetch(`${serverUrl}/user/cards/delete/${valueId}`, {
+            method: 'DELETE'
+        })
+        .then((response) => {
+            if (response.ok) {
+                toast('Deleted Card successfully!');
+                getData();
+            } else {
+                toast('Something went wrong!');
+            }
+        })
+    } catch (err) {
+        console.error(err);
+    }
+};
