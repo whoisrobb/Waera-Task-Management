@@ -1,4 +1,6 @@
+import CreateCard from "@/components/forms/create-card";
 import CreateList from "@/components/forms/create-list";
+import CardItem from "@/components/layout/card-item";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { BoardItem, JwtPayload, List } from "@/lib/types";
@@ -50,8 +52,8 @@ const Board = () => {
       {/* lists */}
         <div className="my-2 flex gap-2 items-start">
             {lists?.map((list) => (
-                <div key={list.ListID} className="max-w-[17rem] min-w-[17rem] flex flex-col border p-2 rounded gap-2">
-                    <div className=" rounded flex items-center justify-between px-2 py-1">
+                <div key={list.ListID} className="w-[17rem] flex flex-col border p-2 rounded gap-2">
+                    <div className="rounded flex items-center justify-between px-2 py-1">
                         <p className="">{list.ListName}</p>
                         <div className="flex gap-1">
                             <Popover>
@@ -59,7 +61,7 @@ const Board = () => {
                                   <button className='w-6 h-6 transition-colors hover:bg-secondary rounded'>+</button>
                                 </PopoverTrigger>
                                 <PopoverContent>
-                                    {/* <CreateCard listId={list.ListID} fetchLists={fetchLists} /> */}
+                                    <CreateCard valueId={list.ListID} getData={getData} />
                                 </PopoverContent>
                             </Popover>
 
@@ -83,11 +85,10 @@ const Board = () => {
                       <div
                         key={card.CardID}
                       >
-                        {/* <CardItem
+                        <CardItem
                             card={card}
-                            deleteCard={deleteCard}
-                            fetchLists={fetchLists}
-                        /> */}
+                            getData={getData}
+                        />
                       </div>
                     ))}
                 </div>
