@@ -82,3 +82,8 @@ export type List = {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type ListProps = {
+  valueId: string;
+  getData: () => void;
+}
