@@ -19,7 +19,7 @@ export type BoardItem = {
 }
 
 export type Attachment = {
-  AttachmentID: string;
+  AttachmentID?: string;
   CardCardID: string;
   FileName: string;
   FilePath: string;

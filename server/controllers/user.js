@@ -301,7 +301,18 @@ const deleteCard = async (req, res) => {
     }
 };
 
-
+/* GET ATTACHMENTS */
+const getCardAttachments = async (req, res) => {
+    try {
+        const { cardId } = req.params;
+        const attachments = await Attachment.findAll({
+            where: { CardCardID: cardId }
+        })
+        res.status(200).json(attachments)
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
 
 
 module.exports = {
@@ -320,5 +331,6 @@ module.exports = {
     getAttachments,
     deleteBoard,
     deleteList,
-    deleteCard
+    deleteCard,
+    getCardAttachments,
 };

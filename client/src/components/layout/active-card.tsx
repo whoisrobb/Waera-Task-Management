@@ -1,5 +1,5 @@
 import { Attachment, Card, Checklist, ChecklistItem, LabelItem } from "@/lib/types";
-import { cn, formatDate, randomColor, serverUrl } from "@/lib/utils";
+import { cn, formatDate, handleOpenFile, randomColor, serverUrl } from "@/lib/utils";
 import Dropzone from 'react-dropzone';
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { BookmarkIcon, CheckCircledIcon, ClockIcon, Cross2Icon, DownloadIcon, ExternalLinkIcon, FileIcon, Pencil2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Checkbox } from "../ui/checkbox";
-import { handleFileSubmit, handleUpdateChecklists } from "@/server-functions/attachment";
+import { getCardAttachments, handleFileSubmit, handleUpdateChecklists } from "@/server-functions/attachment";
 import { handleUpdateCard } from "@/server-functions/card";
 import { handleUpdateLabels } from "@/server-functions/label";
 
@@ -32,21 +32,28 @@ const ActiveCard = ({ card, getData }: { card: Card; getData: () => void }) => {
   
     
     const onDrop = (acceptedFiles: File[]) => {
-        setFiles(acceptedFiles);
+      setFiles(acceptedFiles);
+      fetchAttachments();
     };
 
     useEffect(() => {
-        if (card) {
-            setDescription(card.Description);
-            setCardLabels(card.Labels);
-        //     setCardId(card.CardID);
-        //     setCardName(card.CardName);
-            setDueDate(card.DueDate);
-            setChecklists(card.Checklists);
-            setAttachments(card.Attachments);
-        }
-        fetchLabels()
+      if (card) {
+        setDescription(card.Description);
+        setCardLabels(card.Labels);
+        // setCardId(card.CardID);
+        // setCardName(card.CardName);
+        setDueDate(card.DueDate);
+        setChecklists(card.Checklists);
+        // setAttachments(card.Attachments);
+      }
+      fetchLabels();
+      fetchAttachments();
     }, [])
+
+    const fetchAttachments = async () => {
+      const data = await getCardAttachments(card.CardID);
+      setAttachments(data)
+    }
 
     useEffect(() => {
         if (date) {
@@ -114,33 +121,6 @@ const ActiveCard = ({ card, getData }: { card: Card; getData: () => void }) => {
         handleUpdateChecklists({ valueId: card.CardID, checklists, getData });
     }, [checklists])
     
-    const handleViewFile = (attachment: Attachment) => {
-        const fileType = attachment.FilePath.split('.').pop() || '';
-        const fileUrl = `${serverUrl}/${attachment.FilePath}`; // Adjust file access path
-
-        // Handle opening or downloading based on file type
-        if (['pdf', 'jpg', 'jpeg', 'png'].includes(fileType.toLowerCase())) {
-        // Open directly in browser for viewable files
-            window.open(fileUrl, '_blank');
-        } else {
-        // Trigger download for other file types
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = attachment.FileName;
-            link.click();
-        }
-    };
-
-    const downloadFile = (attachment: Attachment) => {
-        const fileUrl = `${serverUrl}/${attachment.FilePath}`; // Adjust file access path
-      
-        const link = document.createElement('a');
-        link.href = fileUrl;
-        link.download = attachment.FileName;
-        link.click();
-      };
-
-    // console.log(card.Checklists)
     return (
         <>
         <DialogHeader>
@@ -214,7 +194,7 @@ const ActiveCard = ({ card, getData }: { card: Card; getData: () => void }) => {
                                             </div>
                                         ))}
                                     </div>}
-                                <Button onClick={() => { handleFileSubmit({ cardId: card.CardID, files }), setFiles([]) }} disabled={files.length === 0}>
+                                <Button onClick={() => { handleFileSubmit({ cardId: card.CardID, files, fetchAttachments }); setFiles([]) }} disabled={files.length === 0}>
                                     Upload Files
                                 </Button>
                             </section>
@@ -290,17 +270,17 @@ const ActiveCard = ({ card, getData }: { card: Card; getData: () => void }) => {
                         </PopoverContent>
                     </Popover>
                     {cardLabels?.length >= 1 &&
-                        cardLabels.map((cardLabel, index) => (
-                            <button
-                                key={cardLabel.LabelID}
-                                style={{ backgroundColor: `#${cardLabel.Color}` }}
-                                className='inline-flex p-2 m-0 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
-                            >
-                                 <p className="flex items-center gap-1">
-                                    {cardLabel.LabelName}
-                                    <button className='p-1 hover:bg-secondary rounded' onClick={() => removeLabel(index)}><Cross2Icon /></button>
-                                </p>
-                            </button>
+                    cardLabels.map((cardLabel, index) => (
+                      <button
+                          key={cardLabel.LabelID}
+                          style={{ backgroundColor: `#${cardLabel.Color}` }}
+                          className='inline-flex p-2 m-0 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+                      >
+                            <p className="flex items-center gap-1">
+                              {cardLabel.LabelName}
+                              <button className='p-1 hover:bg-secondary rounded' onClick={() => removeLabel(index)}><Cross2Icon /></button>
+                          </p>
+                      </button>
                     ))}
                 </div>
             </>
@@ -316,8 +296,8 @@ const ActiveCard = ({ card, getData }: { card: Card; getData: () => void }) => {
                         <div className="border py-1 px-2 rounded" key={file.AttachmentID}>
                             <p className="text-muted-foreground">{file.FileName}</p>
                             <div className="flex gap-1">
-                                <button className='p-1 hover:bg-secondary rounded' onClick={() => handleViewFile(file)}><ExternalLinkIcon /></button>
-                                <button className='p-1 hover:bg-secondary rounded' onClick={() => downloadFile(file)}><DownloadIcon /></button>
+                                <button className='p-1 hover:bg-secondary rounded' onClick={() => handleOpenFile(file.FileName)}><ExternalLinkIcon /></button>
+                                <button className='p-1 hover:bg-secondary rounded' onClick={() => handleOpenFile(file.FileName)}><DownloadIcon /></button>
                                 <button className='p-1 hover:bg-secondary rounded text-destructive'><TrashIcon /></button>
                             </div>
                         </div>

@@ -1,5 +1,5 @@
 const express = require('express');
-const { createBoard, getUserBoards, getSingleBoard, getLists, createList, createCard, createLabel, getLabels, addAttachments, getAttachments, deleteBoard, deleteList, deleteCard, updateCardDetails, updateChecklists, updateLabels } = require('../controllers/user');
+const { createBoard, getUserBoards, getSingleBoard, getLists, createList, createCard, createLabel, getLabels, addAttachments, getAttachments, deleteBoard, deleteList, deleteCard, updateCardDetails, updateChecklists, updateLabels, getCardAttachments } = require('../controllers/user');
 const upload = require('../controllers/upload');
 const router = express.Router();
 
@@ -50,5 +50,9 @@ router.delete('/lists/delete/:listId', deleteList);
 
 /* DELETE CARD */
 router.delete('/cards/delete/:cardId', deleteCard);
+
+/* GET CARD ATTACHMENTS */
+router.get('/cards/attachments/:cardId', getCardAttachments);
+
 
 module.exports = router;
