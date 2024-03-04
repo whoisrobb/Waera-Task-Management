@@ -8,8 +8,8 @@ interface CreateCard extends ListProps {
 
 interface CardProps extends ListProps {
     cardName?: string;
-    description: string;
-    dueDate: Date;
+    description?: string;
+    dueDate?: Date;
 }
 
 export const handleCreateCard = async ({ cardName, valueId, getData }: CreateCard) => {

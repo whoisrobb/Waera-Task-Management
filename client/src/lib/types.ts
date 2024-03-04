@@ -28,7 +28,7 @@ export type Attachment = {
 }
 
 export type ChecklistItem = {
-  // ChecklistItemID: string;
+  ChecklistItemID?: string;
   ChecklistItemText: string;
   ItemComplete: boolean;
   // createdAt: Date;

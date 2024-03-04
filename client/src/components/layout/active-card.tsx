@@ -51,6 +51,7 @@ const ActiveCard = ({ card, getData }: { card: Card; getData: () => void }) => {
     useEffect(() => {
         if (date) {
             setDueDate(date)
+            handleUpdateCard({ valueId: card.CardID, dueDate: date, getData });
         }
     }, [date])
     
@@ -102,8 +103,8 @@ const ActiveCard = ({ card, getData }: { card: Card; getData: () => void }) => {
     };
 
     useEffect(() => {
-        handleUpdateCard({ valueId: card.CardID, description: description as string, dueDate: date as Date, getData });
-    }, [description, date])
+        handleUpdateCard({ valueId: card.CardID, description: description as string, getData });
+    }, [description])
 
     useEffect(() => {
         handleUpdateLabels({ valueId: card.CardID, cardLabels, getData });
@@ -174,12 +175,12 @@ const ActiveCard = ({ card, getData }: { card: Card; getData: () => void }) => {
                         <Button variant={'secondary'} className='capitalize text-muted-foreground hover:text-secondary-foreground'>dates</Button>
                     </PopoverTrigger>
                     <PopoverContent>
-                        <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            className="rounded-md border"
-                        />
+                      <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={setDate}
+                          className="rounded-md border"
+                      />
                     </PopoverContent>
                 </Popover>
 
@@ -383,9 +384,9 @@ const ChecklistComponent = ({ checklist, checklistIndex, updateChecklistItems }:
                     <Checkbox
                         checked={item.ItemComplete}
                         onCheckedChange={() => handleToggleItem(index)}
-                        id={`checkbox-${index}`}
+                        id={`checkbox-${item.ChecklistItemID}`}
                     />
-                    <Label htmlFor={`checkbox-${index}`}
+                    <Label htmlFor={`checkbox-${item.ChecklistItemID}`}
                       className={cn(
                         'text-muted-foreground cursor-pointer transition-all',
                         item.ItemComplete && 'line-through')}

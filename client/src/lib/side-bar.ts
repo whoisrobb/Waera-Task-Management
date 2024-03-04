@@ -1,43 +1,20 @@
-export const dashboardNavConfig = [
-    {
-      title: 'account',
-      href: '/dashboard/account',
-      icon: '',
-    },
-    {
-      title: 'site',
-      href: '/dashboard/site',
-      icon: '',
-    },
-    {
-      title: 'stores',
-      href: '/dashboard/stores',
-      icon: '',
-    },
-    {
-      title: 'blog',
-      href: '/dashboard/blog',
-      icon: '',
-    },
-]
-
 export const sidebarNav = [
     {
         name: 'main',
         items: [
             {
               title: 'workspace',
-              href: '/dashboard/account',
+              href: '#',
               icon: '',
             },
             {
               title: 'teams',
-              href: '/dashboard/site',
+              href: '#',
               icon: '',
             },
             {
-              title: 'workspace settings',
-              href: '/dashboard/site',
+              title: 'settings',
+              href: '#',
               icon: '',
             },
         ]
@@ -47,22 +24,22 @@ export const sidebarNav = [
         items: [
             {
               title: 'notes',
-              href: '/dashboard/account',
+              href: '#',
               icon: '',
             },
             {
               title: 'inbox',
-              href: '/dashboard/site',
+              href: '#',
               icon: '',
             },
             {
               title: 'calendar',
-              href: '/dashboard/site',
+              href: '#',
               icon: '',
             },
             {
               title: 'tables',
-              href: '/dashboard/site',
+              href: '#',
               icon: '',
             },
         ]
