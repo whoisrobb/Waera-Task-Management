@@ -1,10 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./pages/layout";
-import Workspace from "./pages/workspace";
-import Board from "./pages/board";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import { Toaster } from "sonner";
+import Workspace from "./pages/workspace";
+import Board from "./pages/board";
 
 function App() {
   return (
