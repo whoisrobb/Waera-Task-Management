@@ -45,11 +45,11 @@
     transform: rotate(45deg);
   }
   
-  .custom-checkbox:checked ~ .checkmark {
-    /* background-color: #2196F3; */
-    /* background-color: #f32121; */
-    /* box-shadow: 0 3px 7px rgba(#f32121, 0.3); */
-  }
+  /* .custom-checkbox:checked ~ .checkmark {
+    background-color: #2196F3;
+    background-color: #f32121;
+    box-shadow: 0 3px 7px rgba(#f32121, 0.3);
+  } */
   
   .custom-checkbox:checked ~ .checkmark:after {
     display: block;

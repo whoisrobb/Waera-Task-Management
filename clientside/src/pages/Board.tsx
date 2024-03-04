@@ -1,178 +1,83 @@
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { backgroundColor, formatDate, serverUrl } from '@/lib/utils';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ClockIcon, DotsVerticalIcon, PlusIcon, Share1Icon, TrashIcon } from '@radix-ui/react-icons';
-import {
-    Dialog,
-    DialogContent,
-    // DialogDescription,
-    // DialogFooter,
-    DialogTrigger,
-  } from "@/components/ui/dialog"
-  import 'react-quill/dist/quill.snow.css'
-import CustomCheckbox from '@/components/checkbox/CustomCheckbox';
-import ActiveCard from '@/components/ActiveCard';
-import { BoardItem, Card, Checklist, LabelItem, List } from '@/lib/types';
-import CreateList from '@/forms/CreateList';
-import CreateCard from '@/forms/CreateCard';
-import { toast } from '@/components/ui/use-toast';
-import { useApp } from '@/components/AppProvider';
-
+import CreateCard from "@/components/forms/create-card";
+import CreateList from "@/components/forms/create-list";
+import CardItem from "@/components/layout/card-item";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { BoardItem, JwtPayload, List } from "@/lib/types";
+import { deleteBoard, fetchBoard } from "@/server-functions/board";
+import { deleteList, fetchLists } from "@/server-functions/list";
+import { DotsVerticalIcon, PlusIcon } from "@radix-ui/react-icons";
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Board = () => {
-    const { boardId } = useParams();
-    const { user } = useApp();
-    const navigate = useNavigate();
+  const { boardId } = useParams();
+  const navigate = useNavigate();
 
-    const [boardDetails, setBoardDetail] = useState<BoardItem | null>(null);
-    const [lists, setLists] = useState<List[] | null>(null);
+  const [userData, setUserData] = useState<JwtPayload | null>(null);
+  const [boardDetails, setBoardDetail] = useState<BoardItem | null>(null);
+  const [lists, setLists] = useState<List[] | null>(null);
+  
+  useEffect(() => {
+    getData();
+    const data = localStorage.getItem('accessToken');
+    setUserData(jwtDecode(data as string));
+  }, [boardId])
 
-    useEffect(() => {
-      fetchBoard();
-      fetchLists();
-    }, [boardId])
-
-    const fetchBoard = async () => {
-      try {
-        const response = await fetch(`${serverUrl}/user/boards/board/${boardId}`);
-        const data = await response.json();
-        setBoardDetail(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const fetchLists = async () => {
-      try {
-        const response = await fetch(`${serverUrl}/user/lists/${boardId}`);
-        const data = await response.json();
-        setLists(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const deleteBoard = async () => {
-        try {
-            await fetch(`${serverUrl}/user/boards/delete/${boardId}`, {
-                method: 'DELETE'
-            })
-            .then((response) => {
-                if (response.ok) {
-                    toast({
-                        variant: 'destructive',
-                        description: 'Deleted Board successfully',
-                    });
-                    fetchLists();
-                    navigate(`/workspace/${user?.userId}`);
-                } else {
-                    toast({
-                        variant: 'destructive',
-                        title: 'Failed!',
-                        description: 'Something went wrong.',
-                    });
-                }
-            })
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const deleteList = async (listId: string) => {
-        try {
-            await fetch(`${serverUrl}/user/lists/delete/${listId}`, {
-                method: 'DELETE'
-            })
-            .then((response) => {
-                if (response.ok) {
-                    toast({
-                        variant: 'destructive',
-                        description: 'Deleted List successfully',
-                    });
-                    fetchLists();
-                } else {
-                    toast({
-                        variant: 'destructive',
-                        title: 'Failed!',
-                        description: 'Something went wrong.',
-                    });
-                }
-            })
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const deleteCard = async (cardId: string) => {
-        try {
-            await fetch(`${serverUrl}/user/cards/delete/${cardId}`, {
-                method: 'DELETE'
-            })
-            .then((response) => {
-                if (response.ok) {
-                    toast({
-                        variant: 'destructive',
-                        description: 'Deleted Card successfully',
-                    });
-                    fetchLists();
-                } else {
-                    toast({
-                        variant: 'destructive',
-                        title: 'Failed!',
-                        description: 'Something went wrong.',
-                    });
-                }
-            })
-        } catch (err) {
-            console.error(err);
-        }
-    };
+  const getData = async () => {
+    const [boardData, listsData] = await Promise.all([fetchBoard(boardId as string), fetchLists(boardId as string)]);
+    setBoardDetail(boardData);
+    setLists(listsData);
+  }
 
   return (
     <div className='px-4 py-2 w-full h-full overflow-scroll'>
-        <div className="border p-2 rounded flex justify-between items-baseline">
-            <div>
-                <p className="">{boardDetails?.BoardName}</p>
-                <p className="text-sm text-muted-foreground">{boardDetails?.Description}</p>
-            </div>
-            <Popover>
-                <PopoverTrigger>
-                    <button className='p-1 hover:bg-secondary rounded'><DotsVerticalIcon /></button>
-                </PopoverTrigger>
-                <PopoverContent className='w-48 p-2'>
-                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground'><div className="flex items-center gap-2"><Share1Icon />share board</div></button>
-                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground'><div className="flex items-center gap-2"><PlusIcon />create new list</div></button>
-                    <button className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b]'><div className="flex items-center gap-2" onClick={deleteBoard}><TrashIcon />delete board</div></button>
-                </PopoverContent>
-            </Popover>
-        </div>
+      <div className="border p-2 rounded flex justify-between items-baseline">
+          <div className="leading-tight">
+            <h1 className="font-bold">{boardDetails?.BoardName}</h1>
+            <p className="text-muted-foreground">{boardDetails?.Description}</p>
+          </div>
+          <Popover>
+              <PopoverTrigger>
+                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded flex justify-center items-center'><DotsVerticalIcon /></button>
+              </PopoverTrigger>
+              <PopoverContent className='w-48 p-2'>
+                  <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'><div className="flex items-center gap-2">share board</div></button>
+                  <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'><div className="flex items-center gap-2">create new list</div></button>
+                  <button className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b] hover:text-destructive-foreground transition-colors' onClick={() => deleteBoard({ boardId: boardId as string, userId: userData?.userId as string, navigate})}><div className="flex items-center gap-2">delete board</div></button>
+              </PopoverContent>
+          </Popover>
+      </div>
+
+      {/* lists */}
         <div className="my-2 flex gap-2 items-start">
-            {/* lists */}
             {lists?.map((list) => (
-                <div key={list.ListID} className="max-w-[17rem] min-w-[17rem] flex flex-col border p-2 rounded gap-2">
-                    <div className=" rounded flex items-center justify-between px-2 py-1">
+                <div key={list.ListID} className="min-w-72 flex flex-col border p-2 rounded gap-2">
+                    <div className="rounded flex items-center justify-between px-2 py-1">
                         <p className="">{list.ListName}</p>
                         <div className="flex gap-1">
                             <Popover>
                                 <PopoverTrigger>
-                                    <button className='p-1 hover:bg-secondary rounded'><PlusIcon /></button>
+                                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded flex justify-center items-center'><PlusIcon /></button>
                                 </PopoverTrigger>
                                 <PopoverContent>
-                                    <CreateCard listId={list.ListID} fetchLists={fetchLists} />
+                                    <CreateCard valueId={list.ListID} getData={getData} />
                                 </PopoverContent>
                             </Popover>
 
                             
                             <Popover>
                                 <PopoverTrigger>
-                                    <button className='p-1 hover:bg-secondary rounded'><DotsVerticalIcon /></button>
+                                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded flex justify-center items-center'><DotsVerticalIcon /></button>
                                 </PopoverTrigger>
                                 <PopoverContent className='w-48 p-2'>
-                                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground'>placeholder</button>
-                                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground'>placeholder</button>
-                                    <button className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b]' onClick={() => deleteList(list.ListID)}>delete list</button>
+                                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'>placeholder</button>
+                                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'>placeholder</button>
+                                    <button
+                                      className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b] hover:text-destructive-foreground transition-colors'
+                                      onClick={() => deleteList({ valueId: list.ListID, getData })}
+                                    >delete list</button>
                                 </PopoverContent>
                             </Popover>
                         </div>
@@ -183,8 +88,7 @@ const Board = () => {
                       >
                         <CardItem
                             card={card}
-                            deleteCard={deleteCard}
-                            fetchLists={fetchLists}
+                            getData={getData}
                         />
                       </div>
                     ))}
@@ -193,10 +97,10 @@ const Board = () => {
 
             <Popover>
                 <PopoverTrigger>
-                    <Button variant={'secondary'} className='w-[15rem]'>Create list</Button>
+                    <Button variant={'secondary'} className='w-[15rem] rounded-sm'>Create list</Button>
                 </PopoverTrigger>
                 <PopoverContent>
-                    <CreateList boardId={boardId} fetchLists={fetchLists} />
+                    <CreateList valueId={boardId as string} getData={getData} />
                 </PopoverContent>
             </Popover>
 
@@ -205,104 +109,4 @@ const Board = () => {
   )
 }
 
-export default Board
-
-
-const CardItem = ({ card, deleteCard, fetchLists }: { card: Card; deleteCard: (cardId: string) => void; fetchLists: () => void }) => {
-    const [color, setColor] = useState<string | null>(null);
-    
-    const bgStyles = {
-        background: `linear-gradient(180deg, rgba(${color}, 0.15), rgba(${color}, .05))`
-    };
-
-    const bgClr = () => {
-        const color = backgroundColor();
-        setColor(color)
-    };
-    
-    useEffect(() => {
-        bgClr()
-    }, [])
-
-  return (
-        <Dialog>
-            <div style={bgStyles} className="border rounded py-2 text-sm">
-
-                <div className="flex px-2 justify-between items-baseline">
-                    <div className="flex items-center justify-between">
-                        <p className="text-lg font-bold leading-tight">{card.CardName}</p>
-                                {/* <Checkbox /> */}
-                    </div>
-                    
-                    <Popover>
-                        <PopoverTrigger>
-                            <button className='p-1 hover:bg-secondary rounded'><DotsVerticalIcon /></button>
-                        </PopoverTrigger>
-                        <PopoverContent className='w-48 p-2'>
-                            <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground' onClick={bgClr}>change color</button>
-                            <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground'>placeholder</button>
-                            <button className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b]' onClick={() => deleteCard(card.CardID)}>delete card</button>
-                        </PopoverContent>
-                    </Popover>
-                </div>
-            <DialogTrigger asChild>
-                <button className="w-full text-left p-2 flex flex-col gap-2">
-                    {/* labels */}
-                    {card.Labels.length >= 1 &&
-                    <div className="w-full flex flex-wrap gap-1">
-                        {card.Labels.map((cardLabel: LabelItem) => (
-                            <div className="" key={cardLabel.LabelID}>
-                                <div className=""
-                                >
-                                    <p className='text-sm bg-background py-1 px-2 rounded-md' style={{ color: `#${cardLabel.Color}` }}>{cardLabel.LabelName}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>}
-
-                    {/* Dates */}
-                    {card.DueDate &&
-                    <p className="flex items-center gap-1 text-[12px] text-muted-foreground">
-                        <ClockIcon />
-                        {formatDate(card.createdAt)} - {formatDate(card.DueDate)}
-                    </p>}
-                    
-                    {/* description */}
-                    {card.Description &&
-                    <div className="">
-                        <div className='text-muted-foreground leading-tight' dangerouslySetInnerHTML={{ __html: card.Description }}/>
-                    </div>}
-
-                    {/* checklists */}
-                    {card.Checklists.map((checklist: Checklist, index: number) => (
-                    <div className="" key={index}>
-                        <p>{checklist.ChecklistName}</p>
-                        {card.Checklists &&
-                        <ul>
-                        {checklist.ChecklistItems.map((item, index) => (
-                            <li key={index} className='ml-4'>
-                                <div className="text-muted-foreground flex gap-2">
-                                    <CustomCheckbox complete={item.ItemComplete} color={color} />
-                                    <p className="">{item.ChecklistItemText}</p>
-                                </div>
-                            </li>
-                        ))}
-                        </ul>}
-                    </div>
-                    ))}
-                </button>
-            </DialogTrigger>
-            <DialogContent
-                // className="sm:max-w-[425px]"
-                className=" max-h-[90vh] overflow-y-scroll scrollbar-hide mobile:max-w-screen"
-            >
-                <ActiveCard
-                    card={card}
-                    deleteCard={deleteCard}
-                    fetchLists={fetchLists}
-                />
-            </DialogContent>
-            </div>
-        </Dialog>
-  )
-}
+export default Board;

@@ -1,26 +1,30 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import Layout from "./pages/layout";
-import Workspace from "./pages/workspace";
-import Board from "./pages/board";
-import SignIn from "./pages/sign-in";
-import SignUp from "./pages/sign-up";
-import { Toaster } from "sonner";
+import { Route, Routes, Navigate } from 'react-router-dom';
+import AppProvider from './components/AppProvider';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import WorkspaceLayout from './components/WorkspaceLayout';
+import Workspace from './pages/Workspace';
+import Board from './pages/Board';
+import { Toaster } from './components/ui/toaster';
 
 function App() {
   return (
-    <div className="">
+    <AppProvider>
       <Routes>
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Navigate to="/sign-in" replace />} />
-          <Route path="workspace/:userId" element={<Workspace />} />
-          <Route path="workspace/boards/:boardId" element={<Board />} />
+        <Route path="/">
+          <Route index element={<Navigate to="/login" replace />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+
+          <Route path="workspace" element={<WorkspaceLayout />}>
+            <Route path=":userId" element={<Workspace />} />
+            <Route path="boards/:boardId" element={<Board />} />
+          </Route>
         </Route>
       </Routes>
-      <Toaster richColors />
-    </div>
-  )
+      <Toaster />
+    </AppProvider>
+  );
 }
 
 export default App;

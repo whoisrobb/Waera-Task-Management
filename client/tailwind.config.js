@@ -1,3 +1,6 @@
+const { nextui } = require("@nextui-org/react");
+
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -6,6 +9,8 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
+
   ],
   prefix: "",
   theme: {
@@ -71,7 +76,16 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      screens: {
+        mobile: { 'max': '640px' },
+        tablet: { 'min': '641px', 'max': '960px' },
+        laptop: { 'min': '961px', 'max': '1280px' },
+        desktop: { 'min': '1281px' },
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  // plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), nextui()],
+  darkMode: "class",
+  // plugins: [nextui()],
 }

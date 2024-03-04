@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import './checkbox.css'
 
 const CustomCheckbox = ({ complete, color }: { complete: boolean, color: string | null }) => {
@@ -9,7 +10,10 @@ const CustomCheckbox = ({ complete, color }: { complete: boolean, color: string 
             type="checkbox"
         />
         <span className="checkmark"></span>
-        <span style={{ backgroundColor: complete ? `rgb(${color})` : 'transparent' }} className="checkmark"></span>
+        <span style={{ backgroundColor: complete ? `rgb(${color})` : 'transparent' }}
+          className={cn("checkmark",
+            // complete ? `bg-[rgb(${color})]` : 'bg-transparent'
+          )}></span>
     </label>
 
   )
