@@ -229,65 +229,6 @@ const updateLabels = async (req, res) => {
     }
 }
 
-/* UPDATE ALL CARD */
-const updateCardBulk = async (req, res) => {
-    const { cardId } = req.params;
-
-    try {
-        // Find the card by its ID
-        const card = await Card.findByPk(cardId);
-
-        if (!card) {
-            return res.status(404).json({ message: 'Card not found' });
-        }
-
-        // Update card details
-        await card.update({
-            CardName: req.body.cardName,
-            Description: req.body.description,
-            DueDate: req.body.dueDate,
-            // Add other fields as needed
-        });
-
-        // Update or create checklists
-        await Checklist.destroy({ where: { CardCardID: cardId } });
-        
-        const { checklists } = req.body;
-        for (const checklistData of checklists) {
-            const checklist = await Checklist.create({
-                ChecklistName: checklistData.ChecklistName,
-                CardCardID: cardId,
-            })
-
-            const checklistItems = await ChecklistItem.bulkCreate(checklistData.ChecklistItems.map((item) => ({
-                ChecklistItemText: item.ChecklistItemText,
-                ItemComplete: item.ItemComplete,
-                ChecklistChecklistID: checklist.ChecklistID,
-            })))
-        };
-
-        // Update or create labels
-        const { labelIds } = req.body;
-        const selectedLabels = await Label.findAll({
-            where: { LabelID: labelIds }
-        });
-        await card.setLabels(selectedLabels);
-
-        // Fetch the updated card with its associations
-        const updatedCard = await Card.findByPk(cardId, {
-            include: [
-                { model: Attachment },
-                { model: Checklist, include: [{ model: ChecklistItem }] },
-                { model: Label },
-            ],
-        });
-
-        res.status(200).json(updatedCard);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
-
 /* ADD ATTACHMENTS */
 const addAttachments = async (req, res) => {
     try {
@@ -372,7 +313,6 @@ module.exports = {
     createCard,
     createLabel,
     getLabels,
-    updateCardBulk,
     updateCardDetails,
     updateChecklists,
     updateLabels,

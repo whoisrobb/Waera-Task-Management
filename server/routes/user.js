@@ -1,5 +1,5 @@
 const express = require('express');
-const { createBoard, getUserBoards, getSingleBoard, getLists, createList, createCard, createLabel, getLabels, updateCardBulk, addAttachments, getAttachments, deleteBoard, deleteList, deleteCard, updateCardDetails, updateChecklists, updateLabels } = require('../controllers/user');
+const { createBoard, getUserBoards, getSingleBoard, getLists, createList, createCard, createLabel, getLabels, addAttachments, getAttachments, deleteBoard, deleteList, deleteCard, updateCardDetails, updateChecklists, updateLabels } = require('../controllers/user');
 const upload = require('../controllers/upload');
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/boards/:userId', getUserBoards);
 
 /* CREATE BOARD */
-router.post('/boards/create', createBoard); // switch convention to use params
+router.post('/boards/create', createBoard);
 
 /* GET A SINGLE BOARD */
 router.get('/boards/board/:boardId', getSingleBoard);
@@ -35,9 +35,6 @@ router.put('/cards/updateChecklists/:cardId', updateChecklists);
 
 /* UPDATE LABELS */
 router.put('/cards/updateLabels/:cardId', updateLabels);
-
-/* UPDATE ALL CARD */
-router.put('/cards/updateCard/:cardId', updateCardBulk);
 
 /* ADD ATTACHMENTS */
 router.post('/cards/attachments/:cardId', upload.array('file'), addAttachments);
