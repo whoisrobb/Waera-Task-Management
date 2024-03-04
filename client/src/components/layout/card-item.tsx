@@ -5,6 +5,8 @@ import { Card, Checklist, LabelItem } from "@/lib/types";
 import { backgroundColor, formatDate } from "@/lib/utils";
 import CustomCheckbox from "../checkbox/CustomCheckbox";
 import { deleteCard } from "@/server-functions/card";
+import ActiveCard from "./active-card";
+import { ClockIcon, DotsVerticalIcon } from "@radix-ui/react-icons";
 
 const CardItem = ({ card, getData }: { card: Card; getData: () => void }) => {
     const [color, setColor] = useState<string | null>(null);
@@ -29,12 +31,12 @@ const CardItem = ({ card, getData }: { card: Card; getData: () => void }) => {
                 <div className="flex px-2 justify-between items-baseline">
                     <div className="flex items-center justify-between">
                         <p className="text-lg font-bold leading-tight">{card.CardName}</p>
-                                {/* <Checkbox /> */}
+                        {/* <Checkbox /> */}
                     </div>
                     
                     <Popover>
                         <PopoverTrigger>
-                            <button className='p-1 hover:bg-secondary rounded'>...</button>
+                            <button className='p-1 hover:bg-secondary rounded'><DotsVerticalIcon /></button>
                         </PopoverTrigger>
                         <PopoverContent className='w-48 p-2'>
                             <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground' onClick={bgClr}>change color</button>
@@ -64,7 +66,7 @@ const CardItem = ({ card, getData }: { card: Card; getData: () => void }) => {
                     {/* Dates */}
                     {card.DueDate &&
                     <p className="flex items-center gap-1 text-[12px] text-muted-foreground">
-                        {/* <ClockIcon /> */}
+                        <ClockIcon />
                         {formatDate(card.createdAt)} - {formatDate(card.DueDate)}
                     </p>}
                     
@@ -94,14 +96,12 @@ const CardItem = ({ card, getData }: { card: Card; getData: () => void }) => {
                 </button>
             </DialogTrigger>
             <DialogContent
-                // className="sm:max-w-[425px]"
-                className=" max-h-[90vh] overflow-y-scroll scrollbar-hide mobile:max-w-screen"
+                className="max-h-[90vh] overflow-y-scroll scrollbar-hide"
             >
-                {/* <ActiveCard
+                <ActiveCard
                     card={card}
-                    deleteCard={deleteCard}
-                    fetchLists={fetchLists}
-                /> */}
+                    getData={getData}
+                />
             </DialogContent>
             </div>
         </Dialog>

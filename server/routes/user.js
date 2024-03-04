@@ -1,5 +1,5 @@
 const express = require('express');
-const { createBoard, getUserBoards, getSingleBoard, getLists, createList, createCard, createLabel, getLabels, updateCardBulk, addAttachments, getAttachments, deleteBoard, deleteList, deleteCard } = require('../controllers/user');
+const { createBoard, getUserBoards, getSingleBoard, getLists, createList, createCard, createLabel, getLabels, updateCardBulk, addAttachments, getAttachments, deleteBoard, deleteList, deleteCard, updateCardDetails, updateChecklists, updateLabels } = require('../controllers/user');
 const upload = require('../controllers/upload');
 const router = express.Router();
 
@@ -26,6 +26,15 @@ router.post('/label', createLabel);
 
 /* GET LABELS */
 router.get('/labels', getLabels);
+
+/* UPDATE CARD DETAILS */
+router.put('/cards/updateCardDetails/:cardId', updateCardDetails);
+
+/* UPDATE CHECKLISTS */
+router.put('/cards/updateChecklists/:cardId', updateChecklists);
+
+/* UPDATE LABELS */
+router.put('/cards/updateLabels/:cardId', updateLabels);
 
 /* UPDATE ALL CARD */
 router.put('/cards/updateCard/:cardId', updateCardBulk);

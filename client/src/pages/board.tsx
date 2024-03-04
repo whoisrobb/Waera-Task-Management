@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { BoardItem, JwtPayload, List } from "@/lib/types";
 import { deleteBoard, fetchBoard } from "@/server-functions/board";
 import { deleteList, fetchLists } from "@/server-functions/list";
+import { DotsVerticalIcon, PlusIcon } from "@radix-ui/react-icons";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -39,7 +40,7 @@ const Board = () => {
           </div>
           <Popover>
               <PopoverTrigger>
-                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded'>...</button>
+                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded flex justify-center items-center'><DotsVerticalIcon /></button>
               </PopoverTrigger>
               <PopoverContent className='w-48 p-2'>
                   <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'><div className="flex items-center gap-2">share board</div></button>
@@ -52,13 +53,13 @@ const Board = () => {
       {/* lists */}
         <div className="my-2 flex gap-2 items-start">
             {lists?.map((list) => (
-                <div key={list.ListID} className="w-[17rem] flex flex-col border p-2 rounded gap-2">
+                <div key={list.ListID} className="min-w-72 flex flex-col border p-2 rounded gap-2">
                     <div className="rounded flex items-center justify-between px-2 py-1">
                         <p className="">{list.ListName}</p>
                         <div className="flex gap-1">
                             <Popover>
                                 <PopoverTrigger>
-                                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded'>+</button>
+                                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded flex justify-center items-center'><PlusIcon /></button>
                                 </PopoverTrigger>
                                 <PopoverContent>
                                     <CreateCard valueId={list.ListID} getData={getData} />
@@ -68,7 +69,7 @@ const Board = () => {
                             
                             <Popover>
                                 <PopoverTrigger>
-                                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded'>...</button>
+                                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded flex justify-center items-center'><DotsVerticalIcon /></button>
                                 </PopoverTrigger>
                                 <PopoverContent className='w-48 p-2'>
                                     <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'>placeholder</button>

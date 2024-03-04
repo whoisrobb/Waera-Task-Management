@@ -150,6 +150,85 @@ const getLabels = async (req, res) => {
     }
 };
 
+/* UPDATE CARD DETAILS */
+const updateCardDetails = async (req, res) => {
+    try {
+        const { cardId } = req.params;
+        const card = await Card.findByPk(cardId);
+
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        // Update card details
+        await card.update({
+            CardName: req.body.cardName,
+            Description: req.body.description,
+            DueDate: req.body.dueDate,
+            // Add other fields as needed
+        });
+
+        res.status(200).json({ message: 'Updated successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+/* UPDATE CHECKLISTS */
+const updateChecklists = async (req, res) => {
+    try {
+        const { cardId } = req.params;
+        const card = await Card.findByPk(cardId);
+
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        // Update or create checklists
+        await Checklist.destroy({ where: { CardCardID: cardId } });
+        
+        const { checklists } = req.body;
+        for (const checklistData of checklists) {
+            const checklist = await Checklist.create({
+                ChecklistName: checklistData.ChecklistName,
+                CardCardID: cardId,
+            })
+
+            const checklistItems = await ChecklistItem.bulkCreate(checklistData.ChecklistItems.map((item) => ({
+                ChecklistItemText: item.ChecklistItemText,
+                ItemComplete: item.ItemComplete,
+                ChecklistChecklistID: checklist.ChecklistID,
+            })))
+        };
+
+        res.status(200).json({ message: 'Updated successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+/* UPDATE LABELS */
+const updateLabels = async (req, res) => {
+    try {
+        const { cardId } = req.params;
+        const card = await Card.findByPk(cardId);
+
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        // Update or create labels
+        const { labelIds } = req.body;
+        const selectedLabels = await Label.findAll({
+            where: { LabelID: labelIds }
+        });
+
+        await card.setLabels(selectedLabels);
+
+        res.status(200).json({ message: 'Updated successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 /* UPDATE ALL CARD */
 const updateCardBulk = async (req, res) => {
     const { cardId } = req.params;
@@ -187,7 +266,7 @@ const updateCardBulk = async (req, res) => {
             })))
         };
 
-        // Update or create labels (assuming Card - Label is a many-to-many relationship)
+        // Update or create labels
         const { labelIds } = req.body;
         const selectedLabels = await Label.findAll({
             where: { LabelID: labelIds }
@@ -294,6 +373,9 @@ module.exports = {
     createLabel,
     getLabels,
     updateCardBulk,
+    updateCardDetails,
+    updateChecklists,
+    updateLabels,
     addAttachments,
     getAttachments,
     deleteBoard,

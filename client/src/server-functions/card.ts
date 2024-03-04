@@ -6,6 +6,12 @@ interface CreateCard extends ListProps {
     cardName: string;
 }
 
+interface CardProps extends ListProps {
+    cardName?: string;
+    description: string;
+    dueDate: Date;
+}
+
 export const handleCreateCard = async ({ cardName, valueId, getData }: CreateCard) => {
     try {
       const response = await fetch(`${serverUrl}/user/cards/create/${valueId}`, {
@@ -44,5 +50,26 @@ export const deleteCard = async ({ valueId, getData }: ListProps) => {
         })
     } catch (err) {
         console.error(err);
+    }
+};
+
+export const handleUpdateCard = async ({ description, dueDate, valueId, getData }: CardProps) => {
+    try {
+        const response = await fetch(`${serverUrl}/user/cards/updateCardDetails/${valueId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+                // cardName: ,
+                dueDate: dueDate,
+                description: description,
+            }),
+        });
+        if (response.ok) {
+            getData();
+        }
+    } catch (error) {
+        console.error(error);
     }
 };
