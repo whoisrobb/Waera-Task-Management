@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input"
 import { loginSchema } from "@/lib/validate"
 import { useForm } from "react-hook-form"
 import { z } from 'zod'
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { handleLogin } from "@/server-functions/auth"
 
@@ -88,7 +88,7 @@ const SignInForm = () => {
                                 {/* <Button type="submit">submit</Button> */}
                                 <Button type="submit" disabled={isSubmitting}>
                                     {isSubmitting ? 'Signing in'
-                                    : 'Submit'}
+                                    : 'Login'}
                                 </Button>
                                 {/* <Button
                                     disabled={demoIsSubmitting}
@@ -105,8 +105,9 @@ const SignInForm = () => {
                     </Form>
                 </CardContent>
                 <CardFooter className="flex gap-2 text-center">
-                    <p className="">Don't have an account?</p>
-                    <Link to={'/register'}>Sign Up</Link>
+                    <p className="text-muted-foreground">Press login to continue with demo. Site still under construction</p>
+                    {/* <p className="">Don't have an account?</p>
+                    <Link to={'/register'}>Sign Up</Link> */}
                 </CardFooter>
             </Card>
         </div>
