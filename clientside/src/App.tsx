@@ -3,8 +3,8 @@ import Layout from "./pages/layout";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import { Toaster } from "sonner";
-import Workspace from "./pages/workspace";
-import Board from "./pages/board";
+import Workspace from "./pages/Workspace";
+import Board from "./pages/Board";
 
 function App() {
   return (
