@@ -5,8 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// export const serverUrl = 'http://localhost:3000';
-export const serverUrl = 'https://waera-task-management.onrender.com';
+export const serverUrl = 'http://localhost:3000';
+// export const serverUrl = 'https://waera-task-management.onrender.com';
 
 const xters = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
 

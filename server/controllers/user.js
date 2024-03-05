@@ -57,73 +57,6 @@ const getSingleBoard = async (req, res) => {
     }
 };
 
-/* GET LISTS */
-const getLists = async (req, res) => {
-    try {
-        const { boardId } = req.params;
-
-        const lists = await List.findAll({
-            where: { BoardBoardID: boardId },
-                include: [{
-                    model: Card,
-                    include: [
-                        Attachment,
-                        Comment,
-                        {
-                            model: Checklist,
-                            include: [ChecklistItem],
-                        },
-                        {
-                            model: Label,
-                            through: 'CardLabels',
-                        },
-                    ],
-                    order: [['createdAt', 'ASC']],
-                }],
-                order: [['createdAt', 'ASC']],
-            });
-
-        res.status(200).json(lists);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
-
-
-/* CREATE LIST */
-const createList = async (req, res) => {
-    try {
-        const { boardId } = req.params;
-        const { listName } = req.body;
-
-        const newList = await List.create({
-            BoardBoardID: boardId,
-            ListName: listName
-        });
-        
-        res.status(201).json(newList);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-};
-
-/* CREATE A CARD */
-const createCard = async (req, res) => {
-    try {
-        const { listId } = req.params;
-        const { cardName } = req.body;
-
-        const newCard = await Card.create({
-            ListListID: listId,
-            CardName: cardName
-        });
-        
-        res.status(201).json(newCard);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-};
-
 /* CREATE A LABEL */
 const createLabel = async (req, res) => {
     try {
@@ -276,31 +209,6 @@ const deleteBoard = async (req, res) => {
 };
 
 
-/* DELETE LIST */
-const deleteList = async (req, res) => {
-    try {
-        const { listId } = req.params;
-
-        await List.destroy({ where: { ListID: listId }});
-        res.status(200).json({ message: 'List deleted!' });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
-
-
-/* DELETE CARD */
-const deleteCard = async (req, res) => {
-    try {
-        const { cardId } = req.params;
-
-        await Card.destroy({ where: { CardID: cardId }});
-        res.status(200).json({ message: 'Card deleted!' });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
-
 /* GET ATTACHMENTS */
 const getCardAttachments = async (req, res) => {
     try {
@@ -319,9 +227,6 @@ module.exports = {
     createBoard,
     getUserBoards,
     getSingleBoard,
-    getLists,
-    createList,
-    createCard,
     createLabel,
     getLabels,
     updateCardDetails,
@@ -330,7 +235,5 @@ module.exports = {
     addAttachments,
     getAttachments,
     deleteBoard,
-    deleteList,
-    deleteCard,
     getCardAttachments,
 };

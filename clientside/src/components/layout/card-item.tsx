@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Card, Checklist, LabelItem } from "@/lib/types";
-import { backgroundColor, formatDate } from "@/lib/utils";
+import { backgroundColor, cn, formatDate } from "@/lib/utils";
 import CustomCheckbox from "../checkbox/CustomCheckbox";
 import { deleteCard } from "@/server-functions/card";
 import ActiveCard from "./active-card";
-import { ClockIcon, DotsVerticalIcon } from "@radix-ui/react-icons";
+import { ClockIcon, DotsVerticalIcon, DragHandleDots2Icon } from "@radix-ui/react-icons";
 
 const CardItem = ({ card, getData }: { card: Card; getData: () => void }) => {
     const [color, setColor] = useState<string | null>(null);
+    const [hover, setHover] = useState(false);
     
     const bgStyles = {
         background: `linear-gradient(180deg, rgba(${color}, 0.15), rgba(${color}, .05))`
@@ -26,11 +27,21 @@ const CardItem = ({ card, getData }: { card: Card; getData: () => void }) => {
 
   return (
         <Dialog>
-            <div style={bgStyles} className="border rounded py-2 text-sm">
+            <div
+                style={bgStyles}
+                className="border rounded py-2 text-sm"
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+            >
 
                 <div className="flex px-2 justify-between items-baseline">
                     <div className="flex items-center justify-between">
-                        <p className="text-lg font-bold leading-tight">{card.CardName}</p>
+                        <span
+                            className={cn('hidden transition-all',
+                            hover && 'block')}>
+                            <DragHandleDots2Icon />
+                        </span>
+                        <p className="text-lg font-bold leading-tight flex items-center">{card.CardName}</p>
                         {/* <Checkbox /> */}
                     </div>
                     

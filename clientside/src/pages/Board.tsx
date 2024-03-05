@@ -5,15 +5,30 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { BoardItem, JwtPayload, List } from "@/lib/types";
 import { deleteBoard, fetchBoard } from "@/server-functions/board";
-import { deleteList, fetchLists } from "@/server-functions/list";
+import { deleteList, fetchFilteredLists } from "@/server-functions/list";
 import { DotsVerticalIcon, PlusIcon } from "@radix-ui/react-icons";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+    Select,
+    SelectContent,
+    // SelectGroup,
+    SelectItem,
+    // SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 const Board = () => {
   const { boardId } = useParams();
   const navigate = useNavigate();
+  const DEFAULT_FILTERS = {
+      order: "",
+  };
+
+  const [searchParams, setSearchParams] = useSearchParams(DEFAULT_FILTERS);
+  const order = searchParams.get("order");
 
   const [userData, setUserData] = useState<JwtPayload | null>(null);
   const [boardDetails, setBoardDetail] = useState<BoardItem | null>(null);
@@ -23,13 +38,20 @@ const Board = () => {
     getData();
     const data = localStorage.getItem('accessToken');
     setUserData(jwtDecode(data as string));
-  }, [boardId])
+  }, [boardId, order])
 
   const getData = async () => {
-    const [boardData, listsData] = await Promise.all([fetchBoard(boardId as string), fetchLists(boardId as string)]);
+    const [boardData, listsData] = await Promise.all([fetchBoard(boardId as string), fetchFilteredLists({ valueId: boardId as string, order: order as string })]);
     setBoardDetail(boardData);
     setLists(listsData);
   }
+  
+  const handleOrder = (value: string) => {
+    setSearchParams(prev => {
+        prev.set("order", value)
+        return prev
+    })
+}
 
   return (
     <div className='px-4 py-2 w-full h-full overflow-scroll'>
@@ -38,16 +60,28 @@ const Board = () => {
             <h1 className="font-bold">{boardDetails?.BoardName}</h1>
             <p className="text-muted-foreground">{boardDetails?.Description}</p>
           </div>
-          <Popover>
-              <PopoverTrigger>
-                  <button className='w-6 h-6 transition-colors hover:bg-secondary rounded flex justify-center items-center'><DotsVerticalIcon /></button>
-              </PopoverTrigger>
-              <PopoverContent className='w-48 p-2'>
-                  <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'><div className="flex items-center gap-2">share board</div></button>
-                  <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'><div className="flex items-center gap-2">create new list</div></button>
-                  <button className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b] hover:text-destructive-foreground transition-colors' onClick={() => deleteBoard({ boardId: boardId as string, userId: userData?.userId as string, navigate})}><div className="flex items-center gap-2">delete board</div></button>
-              </PopoverContent>
-          </Popover>
+          <div className="flex items-center gap-4">
+            <Select onValueChange={handleOrder}>
+                <SelectTrigger className="">
+                    <SelectValue placeholder="Filter Order:" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="asc">Ascending</SelectItem>
+                    <SelectItem value="desc">Descending</SelectItem>
+                </SelectContent>
+            </Select>
+
+            <Popover>
+                <PopoverTrigger>
+                    <button className='w-6 h-6 transition-colors hover:bg-secondary rounded flex justify-center items-center'><DotsVerticalIcon /></button>
+                </PopoverTrigger>
+                <PopoverContent className='w-48 p-2'>
+                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'><div className="flex items-center gap-2">share board</div></button>
+                    <button className='w-full text-left text-muted-foreground py-1 px-2 capitalize rounded hover:bg-accent hover:text-accent-foreground transition-colors'><div className="flex items-center gap-2">create new list</div></button>
+                    <button className='w-full text-left text-destructive py-1 px-2 capitalize rounded hover:bg-[#ff49492b] hover:text-destructive-foreground transition-colors' onClick={() => deleteBoard({ boardId: boardId as string, userId: userData?.userId as string, navigate})}><div className="flex items-center gap-2">delete board</div></button>
+                </PopoverContent>
+            </Popover>
+          </div>
       </div>
 
       {/* lists */}
@@ -65,7 +99,6 @@ const Board = () => {
                                     <CreateCard valueId={list.ListID} getData={getData} />
                                 </PopoverContent>
                             </Popover>
-
                             
                             <Popover>
                                 <PopoverTrigger>

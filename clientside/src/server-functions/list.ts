@@ -1,4 +1,4 @@
-import { ListProps } from "@/lib/types";
+import { FilterProps, ListProps } from "@/lib/types";
 import { serverUrl } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -6,15 +6,19 @@ interface CreateList extends ListProps {
     listName: string;
 }
 
-export const fetchLists = async (boardId: string) => {
+export const fetchFilteredLists = async ({ dateFrom, dateTo, order, valueId }: FilterProps) => {
     try {
-        const response = await fetch(`${serverUrl}/user/lists/${boardId}`);
+        const response = await fetch(`${serverUrl}/user/lists/filtered/${valueId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dateFrom, dateTo, order }),
+    });
+    if (response.ok) {
         const data = await response.json();
-        if (response.ok) {
-            return data;
-        } else {
-            toast('Something went wrong!');
-        }
+        return data;
+    } else {
+        toast('Something went wrong!');
+    }
     } catch (err) {
         console.error(err);
     }

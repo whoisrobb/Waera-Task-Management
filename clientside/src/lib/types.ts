@@ -87,3 +87,10 @@ export type ListProps = {
   valueId: string;
   getData: () => void;
 }
+
+export type FilterProps = {
+  dateFrom?: string;
+  dateTo?: string;
+  valueId: string;
+  order?: string;
+}
