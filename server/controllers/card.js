@@ -19,6 +19,30 @@ const createCard = async (req, res) => {
     }
 };
 
+/* UPDATE CARD DETAILS */
+const updateCardDetails = async (req, res) => {
+    try {
+        const { cardId } = req.params;
+        const card = await Card.findByPk(cardId);
+
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        // Update card details
+        await card.update({
+            CardName: req.body.cardName,
+            Description: req.body.description,
+            DueDate: req.body.dueDate,
+            // Add other fields as needed
+        });
+
+        res.status(200).json({ message: 'Updated successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 /* DELETE CARD */
 const deleteCard = async (req, res) => {
     try {
@@ -34,5 +58,6 @@ const deleteCard = async (req, res) => {
 
 module.exports = {
     createCard,
+    updateCardDetails,
     deleteCard,
 }

@@ -1,9 +1,12 @@
 const express = require('express');
-const { createBoard, getUserBoards, getSingleBoard, createLabel, getLabels, addAttachments, getAttachments, deleteBoard, updateCardDetails, updateChecklists, updateLabels, getCardAttachments } = require('../controllers/user');
-const upload = require('../controllers/upload');
-const { createList, getFilteredLists, deleteList } = require('../controllers/list');
-const { getFilteredCards, createCard, deleteCard } = require('../controllers/card');
 const router = express.Router();
+const { createBoard, getUserBoards, getSingleBoard, deleteBoard } = require('../controllers/board');
+const { createList, getFilteredLists, deleteList } = require('../controllers/list');
+const { createCard, deleteCard, updateCardDetails } = require('../controllers/card');
+const { addAttachments, getAttachments, getCardAttachments } = require('../controllers/attachments');
+const { createLabel, getLabels, updateLabels } = require('../controllers/label');
+const { updateChecklists } = require('../controllers/checklist');
+const upload = require('../controllers/upload');
 
 /* GET A USER'S BOARDS */
 router.get('/boards/:userId', getUserBoards);
