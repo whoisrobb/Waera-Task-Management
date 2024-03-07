@@ -73,3 +73,20 @@ export const handleUpdateCard = async ({ description, dueDate, valueId, getData 
         console.error(error);
     }
 };
+
+export const handleUpdateDnd = async ({ valueId, listId }: { valueId: string, listId: string }) => {
+    try {
+        const response = await fetch(`${serverUrl}/user/cards/updateCardDnd/${valueId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+        },
+            body: JSON.stringify({ listId }),
+        });
+        if (!response.ok) {
+            toast('Failed to update Drag & drop data!');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};

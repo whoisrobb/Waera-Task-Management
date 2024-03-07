@@ -55,9 +55,27 @@ const deleteCard = async (req, res) => {
     }
 };
 
+/* DND CARD UPDATE */
+const updateDragDropCard = async (req, res) => {
+    try {
+        const { cardId } = req.params;
+        const { listId } = req.body;
+
+        const card = await Card.findByPk(cardId);
+        await card.update({
+            ListListID: listId
+        })
+
+        res.status(200).json(card);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 
 module.exports = {
     createCard,
     updateCardDetails,
     deleteCard,
+    updateDragDropCard,
 }

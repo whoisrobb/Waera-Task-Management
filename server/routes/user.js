@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { createBoard, getUserBoards, getSingleBoard, deleteBoard } = require('../controllers/board');
 const { createList, getFilteredLists, deleteList } = require('../controllers/list');
-const { createCard, deleteCard, updateCardDetails } = require('../controllers/card');
+const { createCard, deleteCard, updateCardDetails, updateDragDropCard } = require('../controllers/card');
 const { addAttachments, getAttachments, getCardAttachments } = require('../controllers/attachments');
 const { createLabel, getLabels, updateLabels } = require('../controllers/label');
 const { updateChecklists } = require('../controllers/checklist');
@@ -34,6 +34,9 @@ router.get('/labels', getLabels);
 
 /* UPDATE CARD DETAILS */
 router.put('/cards/updateCardDetails/:cardId', updateCardDetails);
+
+/* UPDATE CARD DND */
+router.put('/cards/updateCardDnd/:cardId', updateDragDropCard);
 
 /* UPDATE CHECKLISTS */
 router.put('/cards/updateChecklists/:cardId', updateChecklists);

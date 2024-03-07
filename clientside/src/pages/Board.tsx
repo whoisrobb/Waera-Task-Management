@@ -19,6 +19,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { handleUpdateDnd } from "@/server-functions/card";
 
 const Board = () => {
   const { boardId } = useParams();
@@ -42,6 +44,7 @@ const Board = () => {
 
   const getData = async () => {
     const [boardData, listsData] = await Promise.all([fetchBoard(boardId as string), fetchFilteredLists({ valueId: boardId as string, order: order as string })]);
+    console.log(boardData)
     setBoardDetail(boardData);
     setLists(listsData);
   }
@@ -51,7 +54,45 @@ const Board = () => {
         prev.set("order", value)
         return prev
     })
-}
+  }
+
+  const handleDragDrop = (result: any) => {
+    const { source, destination } = result
+    if (!lists) return
+
+    const listSourceIndex = lists.findIndex((list) => list.ListID === source.droppableId)
+    const listDestinationIndex = lists.findIndex((list) => list.ListID === destination.droppableId)
+
+    const newSourceCards = [...lists[listSourceIndex].Cards]
+    const newDestinationCards = source.droppableId !== destination.droppableId
+      ? [...lists[listDestinationIndex].Cards]
+      : newSourceCards
+    
+      const [removedCard] = newSourceCards.splice(source.index, 1)
+      newDestinationCards.splice(destination.index, 0, removedCard)
+
+      // console.log('removed card old', removedCard.ListListID)
+
+      const newLists = [...lists]
+
+      newLists[listSourceIndex] = {
+        ...lists[listSourceIndex],
+        Cards: newSourceCards
+      }
+
+      console.log('source', lists[listSourceIndex].ListID)
+      console.log('destination', lists[listDestinationIndex].ListID)
+      removedCard.ListListID = lists[listDestinationIndex].ListID
+      handleUpdateDnd({ valueId: removedCard.CardID, listId: lists[listDestinationIndex].ListID })
+      console.log('removed card new', removedCard.ListListID)
+
+      newLists[listDestinationIndex] = {
+        ...lists[listDestinationIndex],
+        Cards: newDestinationCards
+      }
+
+    setLists(newLists)
+  }
 
   return (
     <div className='px-4 py-2 w-full h-full overflow-scroll'>
@@ -85,12 +126,18 @@ const Board = () => {
       </div>
 
       {/* lists */}
+      <DragDropContext
+        onDragEnd={handleDragDrop}
+      >
         <div className="my-2 flex gap-2 items-start">
             {lists?.map((list) => (
-                <div key={list.ListID} className="min-w-72 flex flex-col border p-2 rounded gap-2">
-                    <div className="rounded flex items-center justify-between px-2 py-1">
-                        <p className="">{list.ListName}</p>
-                        <div className="flex gap-1">
+                <div key={list.ListID} className="min-w-72 border p-2 rounded">
+                  <Droppable droppableId={list.ListID}>
+                    {(provided) => (
+                      <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+                        <div className="rounded flex items-center justify-between px-2 py-1">
+                          <p className="">{list.ListName}</p>
+                          <div className="flex gap-1">
                             <Popover>
                                 <PopoverTrigger>
                                   <button className='w-6 h-6 transition-colors hover:bg-secondary rounded flex justify-center items-center'><PlusIcon /></button>
@@ -113,20 +160,29 @@ const Board = () => {
                                     >delete list</button>
                                 </PopoverContent>
                             </Popover>
+                          </div>
                         </div>
-                    </div>
-                    {list.Cards.map((card) => (
-                      <div
-                        key={card.CardID}
-                      >
-                        <CardItem
-                            card={card}
-                            getData={getData}
-                        />
+                        {list.Cards.map((card, index) => (
+                          <Draggable draggableId={card.CardID} index={index} key={card.CardID}>
+                            {(provided) => (
+                            <div
+                              {...provided.dragHandleProps}
+                              {...provided.draggableProps}
+                              ref={provided.innerRef}
+                            >
+                              <CardItem
+                                  card={card}
+                                  getData={getData}
+                              />
+                            </div>)}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
                       </div>
-                    ))}
+                    )}
+                  </Droppable>
                 </div>
-            ))}
+              ))}
 
             <Popover>
                 <PopoverTrigger>
@@ -138,6 +194,7 @@ const Board = () => {
             </Popover>
 
         </div>
+        </DragDropContext>
     </div>
   )
 }
