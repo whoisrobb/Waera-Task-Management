@@ -44,7 +44,6 @@ const Board = () => {
 
   const getData = async () => {
     const [boardData, listsData] = await Promise.all([fetchBoard(boardId as string), fetchFilteredLists({ valueId: boardId as string, order: order as string })]);
-    console.log(boardData)
     setBoardDetail(boardData);
     setLists(listsData);
   }
@@ -71,7 +70,6 @@ const Board = () => {
       const [removedCard] = newSourceCards.splice(source.index, 1)
       newDestinationCards.splice(destination.index, 0, removedCard)
 
-      // console.log('removed card old', removedCard.ListListID)
 
       const newLists = [...lists]
 
@@ -80,11 +78,8 @@ const Board = () => {
         Cards: newSourceCards
       }
 
-      console.log('source', lists[listSourceIndex].ListID)
-      console.log('destination', lists[listDestinationIndex].ListID)
       removedCard.ListListID = lists[listDestinationIndex].ListID
       handleUpdateDnd({ valueId: removedCard.CardID, listId: lists[listDestinationIndex].ListID })
-      console.log('removed card new', removedCard.ListListID)
 
       newLists[listDestinationIndex] = {
         ...lists[listDestinationIndex],
