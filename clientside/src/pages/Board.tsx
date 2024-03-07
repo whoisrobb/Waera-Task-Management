@@ -50,8 +50,8 @@ const Board = () => {
   
   const handleOrder = (value: string) => {
     setSearchParams(prev => {
-        prev.set("order", value)
-        return prev
+      prev.set("order", value)
+      return prev
     })
   }
 

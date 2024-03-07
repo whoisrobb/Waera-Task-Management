@@ -1,10 +1,7 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "iamkharri",
-    "database": "waera_development",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "use_env_variable": "DATABASE_URL",
+    "models": ["user.js", "team.js", "board.js", "list.js", "card.js", "label.js", "attachment.js", "checklist.js", "checklistItem.js", "comment.js"]
   },
   "test": {
     "username": "postgres",
