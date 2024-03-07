@@ -5,7 +5,6 @@ import SignUp from "./pages/sign-up";
 import { Toaster } from "sonner";
 import Workspace from "./pages/Workspace";
 import Board from "./pages/Board";
-import Notes from "./pages/notes";
 
 function App() {
   return (
