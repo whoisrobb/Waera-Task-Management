@@ -18,6 +18,7 @@ const CardItem = ({ card }: { card: Card; }) => {
         await deleteCard({ valueId: cardId });
         fetchData();
     }
+    console.log(isOpen)
   return (
     <div className="border rounded-sm bg-background">
         <Dialog>

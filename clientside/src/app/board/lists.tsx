@@ -51,6 +51,7 @@ const Lists = () => {
 
     setListsData(newLists)
   }
+  console.log(isOpen)
   
   const deleteListItem = async (listId: string) => {
     await deleteList({ valueId: listId });

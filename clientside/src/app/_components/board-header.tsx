@@ -16,6 +16,7 @@ const BoardHeader = () => {
         await deleteBoard(boardData?.boardId!);
         navigate(`/workspace/${user?.userId}`)
     }
+    console.log(isOpen)
   return (
     boardData &&
     <div className="flex justify-between h-24 items-end">
