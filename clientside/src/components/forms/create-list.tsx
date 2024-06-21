@@ -14,12 +14,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import { handleCreateList } from "@/server-functions/list"
+import { handleCreateList } from "@/api/list"
 import { ListProps } from "@/lib/types"
+import { useBoardStore } from "@/providers/board-provider"
 
 type Input = z.infer<typeof listSchema>;
 
-const CreateList = ({ valueId, getData }: ListProps) => {
+const CreateList = ({ valueId }: ListProps) => {
+    const { fetchData } = useBoardStore();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const form = useForm<Input>({
         resolver: zodResolver(listSchema),
@@ -30,12 +32,12 @@ const CreateList = ({ valueId, getData }: ListProps) => {
     
     const onSubmit = async (values: Input) => {
         setIsSubmitting(true);
-        await handleCreateList({ listName: values.listName, valueId, getData});
+        await handleCreateList({ listName: values.listName, valueId });
+        fetchData()
         setIsSubmitting(false);
     };
 
   return (
-    <div>
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
 
@@ -61,7 +63,6 @@ const CreateList = ({ valueId, getData }: ListProps) => {
             </Button>
         </form>
     </Form>
-    </div>
   )
 }
 

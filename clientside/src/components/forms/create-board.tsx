@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { handleBoardCreate } from "@/server-functions/board"
+import { handleBoardCreate } from "@/api/board"
 import { jwtDecode } from "jwt-decode"
 import { JwtPayload } from "@/lib/types"
 
@@ -48,7 +48,6 @@ const CreateBoard = () => {
     
 
   return (
-    <div>
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
 
@@ -93,7 +92,6 @@ const CreateBoard = () => {
             </Button>
         </form>
     </Form>
-    </div>
   )
 }
 

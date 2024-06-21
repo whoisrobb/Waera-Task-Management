@@ -2,95 +2,119 @@ export type JwtPayload = {
     userId: string;
     firstName: string;
     lastName: string;
-    username: string;
     initials: string;
     email: string;
 }
 
 export type BoardItem = {
-  BoardID: string;
-  BoardName: string;
-  Description: string;
-  TeamTeamID: string | null;
-  UserUserID: string;
+  boardId: string;
+  name: string;
+  description: string;
+  teamId: string | null;
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
 //   CreatorUserID: string | null;
 }
 
 export type Attachment = {
-  AttachmentID?: string;
+  attachmentId?: string;
   CardCardID: string;
-  FileName: string;
-  FilePath: string;
+  filename: string;
+  filepath: string;
+  size: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type ChecklistItem = {
-  ChecklistItemID?: string;
-  ChecklistItemText: string;
-  ItemComplete: boolean;
+  checklistItemId?: string;
+  text: string;
+  completed: boolean;
   // createdAt: Date;
   // updatedAt: Date;
 }
 
 export type Checklist = {
-  // ChecklistID: string;
-  ChecklistName: string;
-  // CardCardID: string;
-  ChecklistItems: ChecklistItem[] | [];
+  checklistId: string;
+  name: string;
+  cardId: string;
+  checklistItems: ChecklistItem[] | [];
   // createdAt: Date;
   // updatedAt: Date;
 }
 
 export type CardLabel = {
-  CardCardID: string;
-  LabelLabelID: string;
+  cardId: string;
+  labelId: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type LabelItem = {
   CardLabels: CardLabel[];
-  Color: string;
-  LabelID: string;
-  LabelName: string;
+  color: string;
+  labelId: string;
+  name: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type Card = {
-  CardID: string;
-  CardName: string;
-  Checklists: any;
+  completed: boolean;
+  cardId: string;
+  name: string;
+  checklists: any;
   Comments: any;
-  Attachments: Attachment[] | [];
-  Description: string | undefined;
-  DueDate: Date | null;
-  Labels: LabelItem[] | [];
-  ListListID: string;
+  attachments: Attachment[] | [];
+  description: string | undefined;
+  dueDate: Date | null;
+  labels: LabelItem[] | [];
+  listId: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type List = {
-  ListID: string;
-  Cards: Card[] | [];
-  BoardBoardID: string;
-  ListName: string;
+  listId: string;
+  cards: Card[] | [];
+  boardId: string;
+  name: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type ListProps = {
   valueId: string;
-  getData: () => void;
 }
 
 export type FilterProps = {
-  dateFrom?: string;
-  dateTo?: string;
   valueId: string;
   order?: string;
+}
+
+export type User = {
+  description: string | null;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  avatar: string | null;
+  domain: string | null;
+  initials: string;
+}
+
+export type cardLabels = {
+  cardLabelsTable: {
+    cardId: string | null;
+    labelId: string | null;
+  };
+  labelTable: {
+    name: string;
+    createdAt: Date;
+    updatedAt: Date | null;
+    labelId: string;
+    color: string;
+  };
 }

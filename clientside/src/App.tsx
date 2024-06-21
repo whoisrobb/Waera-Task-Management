@@ -1,10 +1,11 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import Layout from "./pages/layout";
-import SignIn from "./pages/sign-in";
-import SignUp from "./pages/sign-up";
+import { Route, Routes } from "react-router-dom";
+import Layout from "./app/layout";
+import SignIn from "./app/auth/sign-in";
+import SignUp from "./app/auth/sign-up";
 import { Toaster } from "sonner";
-import Workspace from "./pages/Workspace";
-import Board from "./pages/Board";
+import Landing from "./app/landing";
+import Workspace from "./app/workspace/workspace";
+import Board from "./app/board/board";
 
 function App() {
   return (
@@ -12,10 +13,10 @@ function App() {
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Navigate to="/sign-in" replace />} />
-          <Route path="workspace/:userId" element={<Workspace />} />
-          <Route path="workspace/boards/:boardId" element={<Board />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/workspace" element={<Layout />}>
+          <Route path=":userId" element={<Workspace />} />
+          <Route path="boards/:boardId" element={<Board />} />
         </Route>
       </Routes>
       <Toaster richColors />

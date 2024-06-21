@@ -15,11 +15,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ListProps } from "@/lib/types";
-import { handleCreateCard } from "@/server-functions/card";
+import { handleCreateCard } from "@/api/card";
+import { useBoardStore } from "@/providers/board-provider";
 
 type Input = z.infer<typeof cardSchema>;
 
-const CreateCard = ({ valueId, getData }: ListProps) => {
+const CreateCard = ({ valueId }: ListProps) => {
+    const { fetchData } = useBoardStore();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const form = useForm<Input>({
         resolver: zodResolver(cardSchema),
@@ -30,13 +32,13 @@ const CreateCard = ({ valueId, getData }: ListProps) => {
     
     const onSubmit = async (values: Input) => {
         setIsSubmitting(true);
-        await handleCreateCard({ cardName: values.cardName, valueId, getData });
+        await handleCreateCard({ cardName: values.cardName, valueId });
+        fetchData();
         setIsSubmitting(false);
     };
     
 
   return (
-    <div>
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
 
@@ -62,7 +64,6 @@ const CreateCard = ({ valueId, getData }: ListProps) => {
             </Button>
         </form>
     </Form>
-    </div>
   )
 }
 

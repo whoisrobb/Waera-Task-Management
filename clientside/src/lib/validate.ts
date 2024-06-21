@@ -27,7 +27,7 @@ export const loginSchema = z.object({
 
 export const boardSchema = z.object({
     boardName: z.string().min(3).max(255),
-    description: z.string().min(3).max(255)
+    description: z.string().min(0).max(255).optional(),
 });
 
 export const listSchema = z.object({
@@ -36,4 +36,11 @@ export const listSchema = z.object({
 
 export const cardSchema = z.object({
     cardName: z.string().min(3).max(255)
+});
+
+export const userWorkspaceSchema = z.object({
+    firstName: z.string().min(3).max(55),
+    lastName: z.string().min(3).max(55),
+    domain: z.string().min(0).max(55).optional(),
+    description: z.string().min(0).max(255).optional(),
 });
