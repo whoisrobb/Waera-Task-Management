@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { LabelItem } from "@/lib/types";
 import { useBoardStore } from "@/providers/board-provider";
-import { BookmarkIcon, Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
+import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 
 type LabelsProps = {

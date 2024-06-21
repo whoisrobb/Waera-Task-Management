@@ -62,7 +62,7 @@ const Lists = () => {
     >
       <div className="my-2 flex gap-2 items-start">
         {listsData.map((list) => (
-          <div key={list.listId} className="min-w-72 p-2 rounded-md shadow-inner border">
+          <div key={list.listId} className="w-72 p-2 rounded-md shadow-inner border">
             <Droppable droppableId={list.listId}>
               {(provided) => (
                 <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
