@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Card } from "@/lib/types";
-import { cn, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { deleteCard } from "@/api/card";
 import ActiveCard from "../../app/active-card/active-card";
-import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 import DropdownOptions from "./dropdown-options";
 import { Separator } from "../ui/separator";
 import { Paperclip } from "lucide-react";
@@ -13,7 +12,6 @@ import { useBoardStore } from "@/providers/board-provider";
 
 const CardItem = ({ card }: { card: Card; }) => {
     const { fetchData } = useBoardStore();
-    const [hover, setHover] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
     const deleteCardItem = async (cardId: string) => {
